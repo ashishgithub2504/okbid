@@ -1,0 +1,64 @@
+CREATE TABLE `property_auctions` (
+  `id` bigint(50) NOT NULL AUTO_INCREMENT,
+  `property_id` int(10) NOT NULL,
+  `user_id` varchar(255) NOT NULL,
+  `amount` float(10,2) null,
+  `created` datetime NOT NULL,
+  `modified` datetime NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+CREATE TABLE `property_favourites` (
+  `id` bigint(50) NOT NULL AUTO_INCREMENT,
+  `property_id` int(10) NOT NULL,
+  `user_id` varchar(255) NOT NULL,
+  `created` datetime NOT NULL,
+  `modified` datetime NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+CREATE TABLE `property_proposals` (
+  `id` bigint(50) NOT NULL AUTO_INCREMENT,
+  `property_id` int(10) NOT NULL,
+  `user_id` varchar(255) NOT NULL,
+  `amount` float(10,2) DEFAULT NULL,
+  `created` datetime NOT NULL,
+  `modified` datetime NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+CREATE TABLE `property_signatures` (
+  `id` bigint(50) NOT NULL AUTO_INCREMENT,
+  `property_id` int(10) NOT NULL,
+  `user_id` varchar(255) NOT NULL,
+  `created` datetime NOT NULL,
+  `modified` datetime NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+CREATE TABLE `property_updates` (
+  `id` bigint(50) NOT NULL AUTO_INCREMENT,
+  `property_id` int(10) NOT NULL,
+  `type` varchar(255) NOT NULL,
+  `status` int(45) DEFAULT NULL,
+  `date` datetime NOT NULL,
+  `created` datetime NOT NULL,
+  `modified` datetime NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=latin1;
+
+CREATE TABLE `property_views` (
+  `id` bigint(50) NOT NULL AUTO_INCREMENT,
+  `property_id` int(10) NOT NULL,
+  `user_id` varchar(255) NOT NULL,
+  `created` datetime NOT NULL,
+  `modified` datetime NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+ALTER TABLE `okbid`.`property_commisions` 
+ADD COLUMN `role_id` INT(10) NULL AFTER `commision`;
+
+
+ALTER TABLE `okbid`.`property_commisions` 
+CHANGE COLUMN `commision` `commision` FLOAT(10,2) NOT NULL ;

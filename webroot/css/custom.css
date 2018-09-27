@@ -1,0 +1,51 @@
+.cursor{
+    cursor: pointer;
+}
+.content-header h1{
+    float: left;
+}
+.skin-blue .main-header .logo {
+    background-color: #cc920e;
+    color: #fff;
+    border-bottom: 0 solid transparent; 
+}
+.top5 { margin-top:5px; }
+.top7 { margin-top:7px; }
+.top10 { margin-top:10px; }
+.top15 { margin-top:15px; }
+.top17 { margin-top:17px; }
+.top30 { margin-top:30px; }
+
+body {
+  margin: 0;
+  font-family: Arial;
+}
+
+.top-container {
+  background-color: #f1f1f1;
+  padding: 30px;
+  text-align: center;
+}
+
+.header {
+  padding: 10px 16px;
+  background: #555;
+  color: #f1f1f1;
+}
+
+.content {
+  padding: 16px;
+}
+
+.sticky {
+    position: fixed !important;
+    top: 57px;
+    width: 81%;
+    z-index: 9999;
+    background-color: #ecf0f5 !important;
+    padding: 15px 15px 10px 15px !important;
+}
+
+.sticky + .content {
+  padding-top: 60px;
+}

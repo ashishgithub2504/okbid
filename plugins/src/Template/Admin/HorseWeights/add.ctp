@@ -1,0 +1,56 @@
+<?php
+/**
+  * @var \App\View\AppView $this
+  */
+?>
+
+<section class="content-header">
+    <h1>
+        Manage Horse Weights 
+        <small>Create New Horse Weight</small>
+    </h1>
+</section>
+
+<section class="content">
+    <div class="row">
+        <div class="col-md-12">
+            <?php echo $this->Flash->render(); ?>
+        </div>
+    </div>
+    <!-- SELECT2 EXAMPLE -->
+    <div class="box box-default">
+        <div class="box-header with-border">
+            <h3 class="box-title"><?= __('Add Horse Weight') ?></h3>
+        </div><!-- /.box-header -->
+        <?php echo $this->Form->create($horseWeight, ['id'=>'validateform','role' => 'form', 'enctype' => 'multipart/form-data']); ?>
+        <div class="box-body">
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <?php echo $this->Form->input('horse_id', ['class' => 'form-control', 'options' => $horses, 'label' => ['text' => ucfirst('horse Name')]]); ?>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group">         
+                        <?php echo $this->Form->input('weight', ['class' => 'form-control', 'placeholder' => ucfirst('horse weight'), 'label' => ['text' => ucfirst('horse weight'),'class'=>'req']]); ?>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group">         
+                        <?php echo $this->Form->input('weight_date', ['class' => 'form-control', 'label' => ['text' => ucfirst('horse weight date'),'class'=>'req']]); ?>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group">         
+                        <?php echo $this->Form->input('remark', ['class' => 'form-control', 'placeholder' => ucfirst('remark'), 'label' => ['text' => ucfirst('remark'),'class'=>'req']]); ?>
+                    </div>
+                </div>
+            </div><!-- /.row -->
+        </div><!-- /.box-body -->
+        <div class="box-footer">
+            <?= $this->Form->button(__('Submit'), ['class' => 'btn btn-primary']) ?>
+            <?= $this->Html->link(__('Cancel'), ['action' => 'index'], ['class' => 'btn default']) ?>
+        </div>
+        <?= $this->Form->end() ?>
+    </div><!-- /.box -->
+</section>

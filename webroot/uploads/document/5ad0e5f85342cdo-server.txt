@@ -1,0 +1,75 @@
+Droplet Name: centos-512mb-blr1-01
+IP Address: 139.59.17.164
+Username: root
+Password: pKW!M7pv<#
+
+netstat -tulpn
+netstat -aon
+
+kill -9 $PID
+
+sudo yum install httpd
+Once it installs, you can start apache running on your VPS:
+
+sudo service httpd start
+
+Centos 7 comes with MariaDB instead of MySQL.
+yum -y install mariadb-server mariadb
+sudo rpm -Uvh http://dev.mysql.com/get/mysql-community-release-el7-5.noarch.rpm
+
+sudo yum -y install mariadb-server mariadb
+sudo systemctl start mariadb.service
+sudo systemctl enable mariadb.service
+
+mysql_secure_installation
+
+Mysql username and password
+Username: root
+password: Jaipur@123
+
+Going to install php5 first than upgrade further
+sudo yum install php php-mysql
+sudo systemctl restart httpd.service
+
+php7 upgrade
+curl 'https://setup.ius.io/' -o setup-ius.sh
+sudo bash setup-ius.sh
+sudo yum remove php-cli mod_php php-common
+sudo apachectl restart
+systemctl status httpd
+
+sudo yum install nano
+
+Phpmyadmin
+rpm -iUvh http://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm
+yum -y update
+yum -y install phpmyadmin
+
+sudo yum install epel-release
+
+curl --silent --location https://rpm.nodesource.com/setup_6.x | sudo bash -
+If you want to enable the Node.js v8 repository instead of the command above run the following command:
+
+curl --silent --location https://rpm.nodesource.com/setup_8.x | sudo bash -
+Once the NodeSource repository is enabled we can proceed with the Node.js v6 LTS and npm installation:
+
+sudo yum install nodejs
+sudo yum install gcc-c++ make
+
+nano hello_world.js
+and then add the following content:
+
+
+const http = require('http');
+const port = 3000;
+const ip = '0.0.0.0';
+
+http.createServer(function (req, res) {
+  res.writeHead(200, {'Content-Type': 'text/plain'});
+  res.end('Hello World');
+}).listen(port, ip);
+
+console.log(`server is running on ${ip}:${port}`);
+
+node hello_world.js
+
