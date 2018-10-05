@@ -39,6 +39,7 @@ class PropertiesController extends AppController {
 
             $user = $this->Properties->patchEntity($entity, $this->request->data);
             if ($this->Properties->save($user)) {
+                $user['price'] = intval($user['price']);
                 $this->message = $this->msgDictonary['data_save_' . $this->language];
                 $this->responseData = $user;
                 $this->status = true;
@@ -136,12 +137,45 @@ class PropertiesController extends AppController {
         $this->respond();
     }
 
+    //{{URL}}properties/propertyimages (3dtour)
     public function propertyimages() {
         if ($this->request->is('post')) {
             $this->paramsValidation(array('id' => 'notBlank'));
             $property = $this->Properties->get($this->request->data['id']);
             $property = $this->Properties->patchEntity($property, $this->request->data);
             if ($this->Properties->save($property)) {
+                
+                $property['evaculation_date'] = $this->dateformat($property['evaculation_date']);
+                $property['publish'] = $this->dateformat($property['publish']);
+                $property['price'] = intval($property['price']);
+                $property['commission'] = number_format($property['commission'], 2);
+                $property['name'] = Configure::read('PROTY' . LAN)[$property['propertytype_id']] . ',' . $property['city'] . ',' . $property['no_of_room'];
+                $property['propertytype_id'] = $this->Default->getproptype($property['propertytype_id']);
+                $property['category'] = $this->Default->getpropcat($property['category']);
+                $property['sub_category'] = $this->Default->getpropsubcat($property['sub_category']);
+
+                $property['air_direction'] = ($property['air_direction'] == 0)?'':Configure::read('AIR' . LAN)[$property['air_direction']];
+                $property['balcony_type'] = ($property['balcony_type'] == 0)?'':Configure::read('BalconyType' . LAN)[$property['balcony_type']];
+                $property['parking_type'] = ($property['parking_type'] == 0)?'':Configure::read('PARTYPE' . LAN)[$property['parking_type']];
+                $property['first_payment'] = ($property['first_payment'] == 0)?'':Configure::read('FIRSTPAY' . LAN)[$property['first_payment']];
+                $property['handling'] = ($property['handling'] == 0)?'':Configure::read('HANDING' . LAN)[$property['handling']];
+
+                $property['bars'] = ($property['bars'] == 1) ? 'Yes' : 'No';
+                $property['secure_space'] = ($property['secure_space'] == 1) ? 'Yes' : 'No';
+                $property['master_badroom'] = ($property['master_badroom'] == 1) ? 'Yes' : 'No';
+                $property['storage'] = ($property['storage'] == 1) ? 'Yes' : 'No';
+                $property['disable_access'] = ($property['disable_access'] == 1) ? 'Yes' : 'No';
+                $property['is_viewed'] = $this->Default->getView($property['property_id'], $this->loggedInUserId);
+
+                if (!empty($property['property_favourites'])) {
+                    $property['is_favourite'] = '1';
+                } else {
+                    $property['is_favourite'] = '0';
+                }
+                $property['proimagePath'] = _BASE_ . 'uploads/document/';
+                $property['ownershipImagePath'] = _BASE_ . 'uploads/document/';
+            
+                
                 $this->message = $this->msgDictonary['data_save_' . $this->language];
                 $this->responseData = $property;
                 $this->status = true;
@@ -157,15 +191,21 @@ class PropertiesController extends AppController {
         if ($this->request->is('post')) {
 
             $this->paramsValidation(array('id' => 'notBlank'));
-            $entity = $this->Properties->get($this->request->data['id'], ['contain' => ['PropertyImages' => function($q) {
+            $entity = $this->Properties->get($this->request->data['id'], ['contain' => [
+                    'PropertyImages' => function($q) {
                         return $q->select(['id', 'image', 'property_id']);
                     }, 'PropertyOwners' => function($r) {
-                        return $r->select(['name', 'cell', 'idno', 'property_id']);
+                        return $r->select(['id','name', 'cell', 'idno', 'property_id']);
                     }, 'PropertyFavourites' => function($t) {
                         return $t->where(['user_id' => $this->loggedInUserId]);
-                    }]]);
-
-            $entity['evaculation_date'] = $this->dateformat($entity['evaculation_date']);
+                    },'PropertyOwnerships' => function($o){
+                        return $o->select(['id','image','file','property_id']);
+                    }
+                ]]);
+              
+              //$entity = $this->Default->dataformat($entity);
+              $entity['evaculation_date'] = ($this->dateformat($entity['evaculation_date'])== '01/01/1970')?'':$this->dateformat($entity['evaculation_date']);
+              
             $entity['publish'] = $this->dateformat($entity['publish']);
             $entity['price'] = intval($entity['price']);
             $entity['commission'] = number_format($entity['commission'], 2);
@@ -180,6 +220,9 @@ class PropertiesController extends AppController {
             $entity['first_payment'] = ($entity['first_payment'] == 0)?'':Configure::read('FIRSTPAY' . LAN)[$entity['first_payment']];
             $entity['handling'] = ($entity['handling'] == 0)?'':Configure::read('HANDING' . LAN)[$entity['handling']];
             
+            $entity['ac'] = ($entity['ac'] == 0)?'':Configure::read('AIRCOND' . LAN)[$entity['ac']];
+            $entity['property_condition'] = ($entity['property_condition'] == 0)?'':Configure::read('PROPCON' . LAN)[$entity['property_condition']];
+            
             $entity['bars'] = ($entity['bars'] == 1) ? 'Yes' : 'No';
             $entity['secure_space'] = ($entity['secure_space'] == 1) ? 'Yes' : 'No';
             $entity['master_badroom'] = ($entity['master_badroom'] == 1) ? 'Yes' : 'No';
@@ -192,10 +235,9 @@ class PropertiesController extends AppController {
             } else {
                 $entity['is_favourite'] = '0';
             }
-
-            foreach ($entity['property_images'] as $key => $val) {
-                $entity['property_images'][$key]['image'] = _BASE_ . 'uploads/document/' . $val['image'];
-            }
+            $entity['proimagePath'] = _BASE_ . 'uploads/document/';
+            $entity['ownershipImagePath'] = _BASE_ . 'uploads/document/';
+            
             if (!empty($entity)) {
                 $this->message = $this->msgDictonary['data_save_' . $this->language];
                 $this->responseData = $entity;
@@ -237,7 +279,7 @@ class PropertiesController extends AppController {
                     ->contain(['PropertyBids' => function($q) {
                             return $q->order(['PropertyBids.id desc'])->limit(['1']);
                         }, 'PropertyOwners' => function($r) {
-                            return $r->select(['name', 'cell', 'idno', 'property_id']);
+                            return $r->select(['id','name', 'cell', 'idno', 'property_id']);
                         }, 'PropertyImages' => function($p) {
                             return $p->select(['id', 'image', 'property_id']);
                         }])
@@ -247,6 +289,9 @@ class PropertiesController extends AppController {
 
             if (!empty($properties)) {
                 foreach ($properties as $key => $val) {
+                    //$properties = $this->Default->dataformat($val);
+                    //$properties['evaculation_date'] = ($this->dateformat($properties['evaculation_date'])== '01/01/1970')?'':$this->dateformat($properties['evaculation_date']);
+                    
                     $properties[$key]['propertytype_id'] = $this->Default->getproptype($val['propertytype_id']);
                     $properties[$key]['category'] = $this->Default->getpropcat($val['category']);
                     $properties[$key]['sub_category'] = $this->Default->getpropsubcat($val['sub_category']);
@@ -260,7 +305,8 @@ class PropertiesController extends AppController {
                     $properties[$key]['parking_type'] = ($val['parking_type'] == 0)?'':Configure::read('PARTYPE' . LAN)[$val['parking_type']];
                     $properties[$key]['first_payment'] = ($val['first_payment'] == 0)?'':Configure::read('FIRSTPAY' . LAN)[$val['first_payment']];
                     $properties[$key]['handling'] = ($val['handling'] == 0)?'':Configure::read('HANDING' . LAN)[$val['handling']];
-            
+                    
+                    $properties[$key]['defects'] = ($val['defects'] == 1) ? 'Yes' : 'No';
                     $properties[$key]['bars'] = ($val['bars'] == 1) ? 'Yes' : 'No';
                     $properties[$key]['secure_space'] = ($val['secure_space'] == 1) ? 'Yes' : 'No';
                     $properties[$key]['master_badroom'] = ($val['master_badroom'] == 1) ? 'Yes' : 'No';
@@ -269,11 +315,9 @@ class PropertiesController extends AppController {
 
                     $properties[$key]['commission'] = number_format($val['commission'], 2);
                     $properties[$key]['name'] = $val['propertytype_id'] . ',' . $val['city'] . ',' . $val['no_of_room'];
-
-                    foreach ($properties[$key]['property_images'] as $k => $v) {
-                        $properties[$key]['property_images'][$k]['image'] = _BASE_ . 'uploads/document/' . $v['image'];
-                    }
-
+                    $properties[$key]['proimagePath'] = _BASE_ . 'uploads/document/';
+                    $properties[$key]['ownershipImagePath'] = _BASE_ . 'uploads/document/';
+                    
                     if (!empty($val['property_bids'])) {
                         $properties[$key]['is_newoffer'] = '1';
                     } else {
@@ -312,22 +356,25 @@ class PropertiesController extends AppController {
         if ($this->request->is('post')) {
             $properties = $this->Properties->find()
                     ->contain(['PropertyImages' => function($q) {
-                            return $q->select(['image', 'property_id'])->where(['PropertyImages.image !=' => '']);
+                            return $q->select(['id','image', 'property_id'])->where(['PropertyImages.image !=' => '']);
                         }, 'PropertyOwners' => function($r) {
-                            return $r->select(['name', 'cell', 'idno', 'property_id']);
+                            return $r->select(['id','name', 'cell', 'idno', 'property_id']);
                         }, 'PropertyRejects' => function($pr) {
                             return $pr->where(['PropertyRejects.user_id' => $this->loggedInUserId]);
                         }, 'PropertyFavourites' => function($t) {
                             return $t->where(['PropertyFavourites.user_id' => $this->loggedInUserId]);
+                        },'PropertyOwnerships' => function($o){
+                            return $o->select(['id','image','file','property_id']);
                         }])
                     ->hydrate(false)
                     ->where(['status IN ' => ['1', '2']])
                     ->toArray();
 
-
+            
             if (!empty($properties)) {
 
                 foreach ($properties as $key => $val) {
+                    
                     $properties[$key]['evaculation_date'] = $this->dateformat($val['evaculation_date']);
                     $properties[$key]['publish'] = $this->dateformat($val['publish']);
                     $properties[$key]['price'] = intval($val['price']);
@@ -344,6 +391,7 @@ class PropertiesController extends AppController {
                     $properties[$key]['first_payment'] = ($val['first_payment'] == 0)?'':Configure::read('FIRSTPAY' . LAN)[$val['first_payment']];
                     $properties[$key]['handling'] = ($val['handling'] == 0)?'':Configure::read('HANDING' . LAN)[$val['handling']];
                     
+                    $properties[$key]['defects'] = ($val['defects'] == 1) ? 'Yes' : 'No';
                     $properties[$key]['bars'] = ($val['bars'] == 1) ? 'Yes' : 'No';
                     $properties[$key]['secure_space'] = ($val['secure_space'] == 1) ? 'Yes' : 'No';
                     $properties[$key]['master_badroom'] = ($val['master_badroom'] == 1) ? 'Yes' : 'No';
@@ -364,11 +412,14 @@ class PropertiesController extends AppController {
                     }
                     unset($properties[$key]['property_reject']);
 
-                    foreach ($val['property_images'] as $k => $v) {
-                        $properties[$key]['property_images'][$k]['image'] = _BASE_ . 'uploads/document/' . $v['image'];
-                    }
+//                    foreach ($val['property_images'] as $k => $v) {
+//                        $properties[$key]['property_images'][$k]['image'] = _BASE_ . 'uploads/document/' . $v['image'];
+//                    }
                     $properties[$key]['commission'] = $this->Default->getCommission($val['category']);
+                    $properties[$key]['proimagePath'] = _BASE_ . 'uploads/document/';
+                    $properties[$key]['ownershipImagePath'] = _BASE_ . 'uploads/document/';
                 }
+                
 
                 $this->message = $this->msgDictonary['record_found_' . $this->language];
                 $this->responseData = $properties;
@@ -565,6 +616,10 @@ class PropertiesController extends AppController {
                 $results = $this->properties->find()
                         ->contain(['PropertyImages' => function($p) {
                                 return $p->select(['image', 'property_id'])->where(['image !=' => '']);
+                            },'PropertyOwnerships' => function($o){
+                                return $o->select(['image','file','property_id']);
+                            },'PropertyOwnerships' => function($o){
+                                return $o->select(['id','image','file','property_id']);
                             }])
                         ->where(['properties.id IN ' => $ids])
                         ->toArray();
@@ -600,10 +655,11 @@ class PropertiesController extends AppController {
                         $results[$key]['disable_access'] = ($val['disable_access'] == 1) ? 'Yes' : 'No';
                         $results[$key]['is_viewed'] = $this->Default->getView($val['id'], $this->loggedInUserId);
                         
-                        foreach ($val['property_images'] as $k => $v) {
-                            $results[$key]['property_images'][$k]['image'] = !empty($v['image']) ? _BASE_ . 'uploads/document/' . $v['image'] : '';
-                        }
-                        
+//                        foreach ($val['property_images'] as $k => $v) {
+//                            $results[$key]['property_images'][$k]['image'] = !empty($v['image']) ? _BASE_ . 'uploads/document/' . $v['image'] : '';
+//                        }
+                        $results[$key]['proimagePath'] = _BASE_ . 'uploads/document/';
+                        $results[$key]['ownershipImagePath'] = _BASE_ . 'uploads/document/';
                     }
                 }
             }
@@ -677,15 +733,20 @@ class PropertiesController extends AppController {
                     ->where(['property_favourites.user_id' => $this->loggedInUserId])
                     ->toArray();
 
-            $results = $this->properties->find()->contain(['PropertyImages' => function($p) {
-                            return $p->select(['image', 'property_id'])->where(['image !=' => '']);
+            $results = $this->properties->find()->contain([
+                        'PropertyImages' => function($p) {
+                            return $p->select(['id','image', 'property_id'])->where(['image !=' => '']);
+                        },'PropertyOwnerships' => function($o){
+                                return $o->select(['id','image','file','property_id']);
                         }])->where(['id IN ' => $ids])->toArray();
 
             if (!empty($results)) {
                 foreach ($results as $key => $val) {
-                    foreach ($val['property_images'] as $k => $v) {
-                        $results[$key]['property_images'][$k]['image'] = !empty($v['image']) ? _BASE_ . 'uploads/document/' . $v['image'] : '';
-                    }
+//                    foreach ($val['property_images'] as $k => $v) {
+//                        $results[$key]['property_images'][$k]['image'] = !empty($v['image']) ? _BASE_ . 'uploads/document/' . $v['image'] : '';
+//                    }
+                    $results[$key]['proimagePath'] = _BASE_ . 'uploads/document/';
+                    $results[$key]['ownershipImagePath'] = _BASE_ . 'uploads/document/';
                     $results[$key]['name'] = Configure::read('PROTY' . LAN)[$val['propertytype_id']] . ',' . $val['city'] . ',' . $val['no_of_room'];
                 }
             }
@@ -711,13 +772,18 @@ class PropertiesController extends AppController {
                                     return $q->select(['id', 'image', 'property_id']);
                                 }, 'PropertyFavourites' => function($t) {
                                     return $t->where(['user_id' => $this->loggedInUserId]);
+                                },'PropertyOwnerships' => function($o){
+                                    return $o->select(['id','image','file','property_id']);
                                 }])
                             ->where(['user_id' => $this->loggedInUserId])->toArray();
 
 
             if (!empty($myproperty)) {
                 foreach ($myproperty as $key => $val) {
-                    $myproperty[$key]['evaculation_date'] = $this->dateformat($val['evaculation_date']);
+                    //$myproperty[$key] = $this->Default->dataformat($val);
+                    $myproperty[$key]['evaculation_date'] = ($this->dateformat($myproperty[$key]['evaculation_date'])== '01/01/1970')?'':$this->dateformat($myproperty[$key]['evaculation_date']);
+                    //$myproperty[$key]['evaculation_date'] = $this->dateformat($val['evaculation_date']);
+                    
                     $myproperty[$key]['publish'] = $this->dateformat($val['publish']);
                     $myproperty[$key]['price'] = intval($val['price']);
                     $myproperty[$key]['is_viewed'] = $this->Default->getView($val['property_id'], $this->loggedInUserId);
@@ -744,10 +810,9 @@ class PropertiesController extends AppController {
                     } else {
                         $myproperty[$key]['is_favourite'] = '0';
                     }
-
-                    foreach ($val['property_images'] as $k => $v) {
-                        $myproperty[$key]['property_images'][$k]['image'] = _BASE_ . 'uploads/document/' . $v['image'];
-                    }
+                    $myproperty[$key]['proimagePath'] = _BASE_ . 'uploads/document/';
+                    $myproperty[$key]['ownershipImagePath'] = _BASE_ . 'uploads/document/';
+                    
                 }
             }
 
@@ -766,7 +831,8 @@ class PropertiesController extends AppController {
     public function submitquote() {
         if ($this->request->is('post')) {
             $this->paramsValidation(array('id' => 'notBlank', 'price' => 'notBlank'));
-                                
+            
+            
             $already = $this->propertybid->find()->where(['user_id' => $this->loggedInUserId, 'property_id' => $this->request->data['id']])->count();
             if ($already < 1) {
                 $entity = $this->propertybid->newEntity();
@@ -774,6 +840,13 @@ class PropertiesController extends AppController {
                 $entity->user_id = $this->loggedInUserId;
                 $entity->price = $this->request->data['price'];
                 if ($this->propertybid->save($entity)) {
+                    
+                    $this->properties->updateAll([
+                            'updated_price' => $this->request->data['price']
+                                ], ['id' => $this->request->data['id']]);
+                    
+                    $this->propertysign->deleteAll(['property_id'=> $this->request->data['id'] , 'user_id' => $this->loggedInUserId]);                    
+                    
                     $userdata = $this->Default->getuserinfobyprop($this->request->data['id']);
                     
                     $message['title'] = 'Okbid Notification';
@@ -811,6 +884,31 @@ class PropertiesController extends AppController {
             $result['map'] = $this->propertybid->find()->select(['price', 'created'])->where(['property_id' => $this->request->data['id']])->toArray();
 
             if (!empty($result)) {
+                
+                foreach ($result as $key => $val) {
+                    $result[$key]['evaculation_date'] = $this->dateformat($val['evaculation_date']);
+                    $result[$key]['publish'] = $this->dateformat($val['publish']);
+                    $result[$key]['price'] = intval($val['price']);
+                    $result[$key]['is_viewed'] = $this->Default->getView($val['property_id'], $this->loggedInUserId);
+                    $result[$key]['commission'] = number_format($val['commission'], 2);
+                    $result[$key]['name'] = Configure::read('PROTY' . LAN)[$val['propertytype_id']] . ',' . $val['city'] . ',' . $val['no_of_room'];
+                    $result[$key]['propertytype_id'] = $this->Default->getproptype($val['propertytype_id']);
+                    $result[$key]['category'] = $this->Default->getpropcat($val['category']);
+                    $result[$key]['sub_category'] = $this->Default->getpropsubcat($val['sub_category']);
+
+                    $result[$key]['air_direction'] = ($val['air_direction'] == 0)?'':Configure::read('AIR' . LAN)[$val['air_direction']];
+                    $result[$key]['balcony_type'] = ($val['balcony_type'] == 0)?'':Configure::read('BalconyType' . LAN)[$val['balcony_type']];
+                    $result[$key]['parking_type'] = ($val['parking_type'] == 0)?'':Configure::read('PARTYPE' . LAN)[$val['parking_type']];
+                    $result[$key]['first_payment'] = ($val['first_payment'] == 0)?'':Configure::read('FIRSTPAY' . LAN)[$val['first_payment']];
+                    $result[$key]['handling'] = ($val['handling'] == 0)?'':Configure::read('HANDING' . LAN)[$val['handling']];
+
+                    $result[$key]['bars'] = ($val['bars'] == 1) ? 'Yes' : 'No';
+                    $result[$key]['secure_space'] = ($val['secure_space'] == 1) ? 'Yes' : 'No';
+                    $result[$key]['master_badroom'] = ($val['master_badroom'] == 1) ? 'Yes' : 'No';
+                    $result[$key]['storage'] = ($val['storage'] == 1) ? 'Yes' : 'No';
+                    $result[$key]['disable_access'] = ($val['disable_access'] == 1) ? 'Yes' : 'No';
+                }
+                
                 $this->message = $this->msgDictonary['record_found_' . $this->language];
                 $this->responseData = $result;
                 $this->status = true;
@@ -909,14 +1007,19 @@ class PropertiesController extends AppController {
                     ])
                     ->where(['user_id' => $this->loggedInUserId])
                     ->toArray();
-
             if (!empty($ids)) {
-                $results = $this->properties->find()->contain(['PropertyImages' => function($p) {
-                                return $p->select(['image', 'property_id'])->where(['image !=' => '']);
-                            }])->where(['id IN ' => $ids, 'status' => '1'])->toArray();
-
+                $results = $this->properties->find()->contain(
+                            ['PropertyImages' => function($p) {
+                                return $p->select(['id','image', 'property_id'])->where(['image !=' => '']);
+                            },'PropertyOwnerships' => function($o){
+                                return $o->select(['id','image','file','property_id']);
+                            }])->where(['id IN ' => $ids])->toArray();
+                
                 if (!empty($results)) {
                     foreach ($results as $key => $val) {
+                        //$results[$key] = $this->Default->dataformat($val);
+                        $results[$key]['evaculation_date'] = ($this->dateformat($results[$key]['evaculation_date'])== '01/01/1970')?'':$this->dateformat($results[$key]['evaculation_date']);
+                    
                         $results[$key]['is_viewed'] = $this->Default->getView($val['property_id'], $this->loggedInUserId);
                         $results[$key]['price'] = intval($results[$key]['price']);
                         
@@ -939,11 +1042,10 @@ class PropertiesController extends AppController {
                         $results[$key]['master_badroom'] = ($val['master_badroom'] == 1) ? 'Yes' : 'No';
                         $results[$key]['storage'] = ($val['storage'] == 1) ? 'Yes' : 'No';
                         $results[$key]['disable_access'] = ($val['disable_access'] == 1) ? 'Yes' : 'No';
-                    
-                        foreach ($val['property_images'] as $k => $v) {
-                            $results[$key]['property_images'][$k]['image'] = !empty($v['image']) ? _BASE_ . 'uploads/document/' . $v['image'] : '';
-                        }
-                        $results[$key]['name'] = Configure::read('PROTY' . LAN)[$val['propertytype_id']] . ',' . $val['city'] . ',' . $val['no_of_room'];
+                        $results[$key]['proimagePath'] = _BASE_ . 'uploads/document/';
+                        $results[$key]['ownershipImagePath'] = _BASE_ . 'uploads/document/';
+                        
+                        //$results[$key]['name'] = Configure::read('PROTY' . LAN)[$val['propertytype_id']] . ',' . $val['city'] . ',' . $val['no_of_room'];
                     }
                 }
             }
@@ -973,16 +1075,21 @@ class PropertiesController extends AppController {
 
             if (!empty($ids)) {
                 $results = $this->properties->find()->contain(['PropertyImages' => function($p) {
-                                return $p->select(['image', 'property_id'])->where(['image !=' => '']);
+                                return $p->select(['id','image', 'property_id'])->where(['image !=' => '']);
+                            },'PropertyOwnerships' => function($o){
+                                return $o->select(['id','image','file','property_id']);
                             }])->where(['id IN ' => $ids, 'status' => '2'])->toArray();
 
                 if (!empty($results)) {
                     foreach ($results as $key => $val) {
                         $results[$key]['is_viewed'] = $this->Default->getView($val['property_id'], $this->loggedInUserId);
                         $results[$key]['price'] = intval($results[$key]['price']);
-                        foreach ($val['property_images'] as $k => $v) {
-                            $results[$key]['property_images'][$k]['image'] = !empty($v['image']) ? _BASE_ . 'uploads/document/' . $v['image'] : '';
-                        }
+//                        foreach ($val['property_images'] as $k => $v) {
+//                            $results[$key]['property_images'][$k]['image'] = !empty($v['image']) ? _BASE_ . 'uploads/document/' . $v['image'] : '';
+//                        }
+                        $results[$key]['proimagePath'] = _BASE_ . 'uploads/document/';
+                        $results[$key]['ownershipImagePath'] = _BASE_ . 'uploads/document/';
+                        
                         $results[$key]['name'] = Configure::read('PROTY' . LAN)[$val['propertytype_id']] . ',' . $val['city'] . ',' . $val['no_of_room'];
                     }
                 }
@@ -1035,5 +1142,37 @@ class PropertiesController extends AppController {
         $this->Default->pushnotification($message, $devices);
         die;
     }
+    
+    public function deleteownership(){
+        if ($this->request->is('post')) {
+            $this->paramsValidation(array('id' => 'notBlank'));
+            $this->PropertyOwnerships = TableRegistry::get('property_ownerships');
+            if ($this->PropertyOwnerships->deleteAll(['id' => $this->request->data['id']])) {
+                $this->message = $this->msgDictonary['prop_ownership_' . $this->language];
+                $this->status = true;
+            } else {
+                $this->message = $this->msgDictonary['no_record_found_' . $this->language];
+                $this->status = false;
+            }
+        }
+        $this->respond();
+    }
+    
+    public function deleteowners(){
+        if ($this->request->is('post')) {
+            $this->paramsValidation(array('id' => 'notBlank'));
+            $this->PropertyOwners  = TableRegistry::get('property_owners');
+            if ($this->PropertyOwners->deleteAll(['id' => $this->request->data['id']])) {
+                $this->message = $this->msgDictonary['prop_owners_' . $this->language];
+                $this->status = true;
+            } else {
+                $this->message = $this->msgDictonary['no_record_found_' . $this->language];
+                $this->status = false;
+            }
+        }
+        $this->respond();
+    }
+    
+    
 
 }

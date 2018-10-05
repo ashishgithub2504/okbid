@@ -52,9 +52,9 @@ class AppController extends Controller {
     public $code = 200;
     public $errors = '';
     public $authAllowedMethods = ['login', 'register', 'forgot', 'reset', 'home', 'index', 'view', 'updatedetail', 'broadcast', 'resendotp',                                   
-                                  'checkNotification','destroy'];
+                                  'checkNotification','destroy','fblogin'];
     public $testMethods = ['testwebservices','varification'];
-    public $uploadtMethods = ['register','images','propertyimages','editprofile'];
+    public $uploadtMethods = ['register','images','propertyimages','editprofile','fblogin'];
     public $loggedInUserId = null;
     public $settings = null;
     public $language = 'en';
@@ -131,7 +131,8 @@ class AppController extends Controller {
         'pro_decln_bid_en' => 'Bid successfully decline',
         'prop_act_en' => 'Property activate successfully',
         'prop_inact_en' => 'Property Inactivate successfully',
-        
+        'prop_ownership_en' => 'Property ownership document has been deleted',
+        'prop_owners_en' => 'Property owners has been deleted',
         // user images
         'invalid_extension_en' => 'Image not uploaded because of extension issue.',
         'image_success_en' => 'Profile pic uploaded successfully.',

@@ -83,11 +83,13 @@ class UsersController extends AppController {
     
     public function fblogin(){
         if ($this->request->is('post') && !empty($this->request->data)) {
+            
             $this->paramsValidation(array('fbid' => 'notBlank',"email"=>'notBlank','device_token'=>'notBlank','device_type'=>'notBlank'));
             $users = $this->Users->find()->where(['fb_id'=> $this->request->data['fbid']])->first();
            
             if($users){
                 $data = $this->_loginResponse($users['id'], $users, $users['auth_token']);
+                $data['new_user'] = '0';
                 $this->status = true;
                 $this->responseData = $data;
                 $this->message = $this->msgDictonary['login_success_'.$this->language];
@@ -97,7 +99,17 @@ class UsersController extends AppController {
                 $this->request->data['role_id'] = 2;
                 $this->request->data['username'] = $this->request->data['email'];
                 $this->request->data['fb_id'] = $this->request->data['fbid'];
-                $this->request->data['name'] = 'okbid';
+                
+                if(isset($this->request->data['phone'])){
+                    $this->request->data['phone'] = isset($this->request->data['phone'])?$this->request->data['phone']:'';
+                }
+                
+                $this->request->data['gender'] = isset($this->request->data['gender'])?$this->request->data['gender']:'';
+                $this->request->data['profile_pic'] = isset($this->request->data['profile_pic_file'])?$this->request->data['profile_pic_file']:'';
+                $this->request->data['type'] = isset($this->request->data['type'])?$this->request->data['type']:'';
+                $this->request->data['notification'] = isset($this->request->data['notification'])?$this->request->data['notification']:'';
+                $this->request->data['name'] = isset($this->request->data['name'])?$this->request->data['name']:'';
+                $this->request->data['last_name'] = isset($this->request->data['last_name'])?$this->request->data['last_name']:'';
                 $this->request->data['password'] = '123456';
 
                 $user = $this->Users->patchEntity($user, $this->request->data);
@@ -110,9 +122,12 @@ class UsersController extends AppController {
                     
                     $data = $this->_loginResponse($user['id'], $this->request->data, $auth_token);
                     
+                    $data['new_user'] = '1';
                     $this->status = true;
                     $this->responseData = $data;
                     $this->message = $this->msgDictonary['login_success_'.$this->language];
+                }else{
+                    $this->message = $this->errors = $this->Default->get_errors($user->errors());
                 }
             }            
         }
@@ -180,6 +195,7 @@ class UsersController extends AppController {
         //$user_data['login_by'] = $requestData['login_by'];
         //$user_data['type'] = $requestData['type'];
         $user_data['online_status'] = 1;
+        
         $user = $this->Users->get($user_id);
         $user = $this->Users->patchEntity($user, $user_data);
         $this->Users->save($user);
@@ -194,9 +210,17 @@ class UsersController extends AppController {
         $user_data['is_activation'] = $user['is_activation'];
         $user_data['activation_code'] = $user['activation_code'];
         $user_data['notification'] = $user['notification'];
+        $user_data['job_place'] = $user['job_place'];
+        $user_data['profile_pic'] = $user['profile_pic'];
         
         //$user_data['profile_pic'] = ($user['profile_pic'] != '') ? _BASE_ . "uploads/users/" . $user['profile_pic'] : $user['profile_pic'];
-        $user_data['profile_pic'] = ($user['profile_pic'] != '') ? _BASE_ . "uploads/users/" . $user['profile_pic'] : _BASE_ . 'webroot/img/' . 'avatar.png';
+        
+        if(parse_url($user_data['profile_pic'], PHP_URL_SCHEME) == NULL){
+            $user_data['profile_pic'] = ($user['profile_pic'] != '') ? _BASE_ . "uploads/users/" . $user['profile_pic'] : _BASE_ . 'webroot/img/' . 'avatar.png';
+        }else{
+            $user_data['profile_pic'] = ($user['profile_pic'] != '') ? $user['profile_pic'] : _BASE_ . 'webroot/img/' . 'avatar.png';
+        }
+        
         //$user_data['protype'] = Configure::read('PROTY_'.$this->language);
         $user_data['airdirection'] = Configure::read('AIR_'.$this->language);
         $user_data['balconytype'] = Configure::read('BalconyType_'.$this->language);
@@ -283,7 +307,8 @@ class UsersController extends AppController {
             
             $users->name = isset($this->request->data['name'])?$this->request->data['name']:$users->name;
             $users->last_name = isset($this->request->data['last_name'])?$this->request->data['last_name']:$users->last_name;
-            //$users->phone = isset($this->request->data['phone'])?$this->request->data['phone']:$users->phone;
+            $users->phone = isset($this->request->data['phone'])?$this->request->data['phone']:$users->phone;
+            $users->gender = isset($this->request->data['gender'])?$this->request->data['gender']:$users->gender;            
             $users->id_number = isset($this->request->data['id_number'])?$this->request->data['id_number']:$users->id_number;
             $users->address = isset($this->request->data['address'])?$this->request->data['address']:$users->address;
             $users->language = isset($this->request->data['language'])?$this->request->data['language']:$users->language;
@@ -400,6 +425,8 @@ class UsersController extends AppController {
             $entity->image_file = $this->request->data['image'];
             $entity->status = 1;
             if($obj->save($entity)){
+                $entity['proimagePath'] = _BASE_ . 'uploads/document/';
+                $entity['ownershipImagePath'] = _BASE_ . 'uploads/document/';
                 //$entity['image'] = _BASE_.'uploads/images/'.$entity['image'];
                 $this->status = true;
                 $this->responseData = $entity;
