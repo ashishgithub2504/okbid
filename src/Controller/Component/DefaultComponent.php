@@ -175,36 +175,50 @@ class DefaultComponent extends Component {
         $result = TableRegistry::get('Users')->find()->where(['id' => $user_id])->select(['name', 'profile_pic'])->first();
         return $result;
     }
+    
+    
 
     public function getgroups($id = null) {
         $result = TableRegistry::get('Groups')->find()->where(['user_id' => $id])->toArray();
         return $result;
     }
     
-    public function getproptype($id = null){
-        
-        $result = TableRegistry::get('propertytypes')->find()->select(['name','namehr'])->where(['id'=>$id])->first();
-        if(!empty($result)){
-            return $result['name'];
+    public function getproptype($id = null , $cat = 'en'){
+        if($cat == 'en'){
+            $sel = 'name';
         }else{
-            return $id;
+            $sel = 'namehe';
+        }
+        $result = TableRegistry::get('propertytypes')->find()->select(['name','namehe'])->where(['id'=>$id])->first();
+        if(!empty($result)){
+            return $result[$sel];
+        }else{
+            return '';
         }
     }
     
-    public function getpropcat($id = null){
-        
-        $result = TableRegistry::get('categories')->find()->select(['name'])->where(['id'=>$id])->first();
-        if(!empty($result)){
-            return $result['name'];
+    public function getpropcat($id = null , $cat = 'en'){
+        if($cat == 'en'){
+            $sel = 'name';
         }else{
-            return $id;
+            $sel = 'namehe';
+        }
+        $result = TableRegistry::get('categories')->find()->select([$sel])->where(['id'=>$id])->first();
+        if(!empty($result)){
+            return $result[$sel];
+        }else{
+            return '';
         }
     }
-    public function getpropsubcat($id = null){
-        
-        $result = TableRegistry::get('categories')->find()->select(['name'])->where(['id'=>$id])->first();
+    public function getpropsubcat($id = null, $cat = 'en'){
+         if($cat == 'en'){
+            $sel = 'name';
+        }else{
+            $sel = 'namehe';
+        }
+        $result = TableRegistry::get('subcategories')->find()->select([$sel])->where(['id'=>$id])->first();
         if(!empty($result)){
-            return $result['name'];
+            return $result[$sel];
         }else{
             return $id;
         }
@@ -215,12 +229,91 @@ class DefaultComponent extends Component {
         return $userinfo;
     }
     
-    public function getuserinfobyprop($pid = null){
+    public function getCountryName($id = null){
+        $userinfo = TableRegistry::get('countries')->find()->select(['name'])->hydrate(false)->where(['id'=>$id,'status'=>'1'])->first();
+        return isset($userinfo)?$userinfo['name']:'';
+    }
+    public function getStateName($id = null){
+        $userinfo = TableRegistry::get('states')->find()->select(['name'])->hydrate(false)->where(['id'=>$id,'status'=>'1'])->first();
+        return isset($userinfo)?$userinfo['name']:'';
+    }
+    public function getCityName($id = null){
+        $userinfo = TableRegistry::get('cities')->find()->select(['name'])->hydrate(false)->where(['code'=>$id,'status'=>'1'])->first();
+        return isset($userinfo)?$userinfo['name']:'';
+    }
+    
+    public function getStreetName($id = null){
+        $userinfo = TableRegistry::get('streets')->find()->select(['name'])->hydrate(false)->where(['id'=>$id,'status'=>'1'])->first();
+        return isset($userinfo)?$userinfo['name']:'';
+    }
+    
+	public function getOwners($id = null){
+		$results = TableRegistry::get('property_owners')->find()
+				->select(['id', 'name', 'cell', 'idno', 'property_id'])
+				->where(['property_owners.property_id' => $id])
+				->toArray();
+		return !empty($results)?$results:[];		
+	}
+	
+	public function getFavourte($id = null){
+		$results = TableRegistry::get('property_favourites')->find()
+				->where(['property_favourites.property_id' => $id])
+				->toArray();
+		return !empty($results)?$results:[];		
+	}
+	
+	public function getOwnership($id = null){
+		$results = TableRegistry::get('property_ownerships')->find()
+				->where(['property_ownerships.property_id' => $id])
+				->toArray();
+		return !empty($results)?$results:[];		
+	}
+    
+    
+    public function dataformat($entity = null){
+        
+//        $entity['evaculation_date'] = ($this->dateformat($entity['evaculation_date'])== '01/01/1970')?'':$this->dateformat($entity['evaculation_date']);
+//        $entity['publish'] = $this->dateformat($entity['publish']);
+        $entity['price'] = intval($entity['price']);
+        $entity['commission'] = number_format($entity['commission'], 2);
+        $entity['name'] = Configure::read('PROTY' . LAN)[$entity['propertytype_id']] . ',' . $entity['city'] . ',' . $entity['no_of_room'];
+        $entity['propertytype_id'] = $this->getproptype($entity['propertytype_id']);
+        $entity['category'] = $this->getpropcat($entity['category']);
+        $entity['sub_category'] = $this->getpropsubcat($entity['sub_category']);
+
+        $entity['air_direction'] = ($entity['air_direction'] == 0)?'':Configure::read('AIR' . LAN)[$entity['air_direction']];
+        $entity['balcony_type'] = ($entity['balcony_type'] == 0)?'':Configure::read('BalconyType' . LAN)[$entity['balcony_type']];
+        $entity['parking_type'] = ($entity['parking_type'] == 0)?'':Configure::read('PARTYPE' . LAN)[$entity['parking_type']];
+        $entity['first_payment'] = ($entity['first_payment'] == 0)?'':Configure::read('FIRSTPAY' . LAN)[$entity['first_payment']];
+        $entity['handling'] = ($entity['handling'] == 0)?'':Configure::read('HANDING' . LAN)[$entity['handling']];
+
+        $entity['ac'] = ($entity['ac'] == 0)?'':Configure::read('AIRCOND' . LAN)[$entity['ac']];
+        $entity['property_condition'] = ($entity['property_condition'] == 0)?'':Configure::read('PROPCON' . LAN)[$entity['property_condition']];
+
+        $entity['bars'] = ($entity['bars'] == 1) ? 'Yes' : 'No';
+        $entity['secure_space'] = ($entity['secure_space'] == 1) ? 'Yes' : 'No';
+        $entity['master_badroom'] = ($entity['master_badroom'] == 1) ? 'Yes' : 'No';
+        $entity['storage'] = ($entity['storage'] == 1) ? 'Yes' : 'No';
+        $entity['disable_access'] = ($entity['disable_access'] == 1) ? 'Yes' : 'No';
+        $entity['is_viewed'] = $this->getView($entity['property_id'], $this->loggedInUserId);
+
+        if (!empty($entity['property_favourites'])) {
+            $entity['is_favourite'] = '1';
+        } else {
+            $entity['is_favourite'] = '0';
+        }
+        $entity['proimagePath'] = _BASE_ . 'uploads/document/';
+        $entity['ownershipImagePath'] = _BASE_ . 'uploads/document/';
+        //pr($entity); die;
+        return $entity;    
+    }
+
+        public function getuserinfobyprop($pid = null){
         $push = TableRegistry::get('properties')->find()
                         ->where(['properties.id' => $pid])
-                        ->select(['Users.device_token','Users.device_type'])
+                        ->select(['device_token'=>'Users.device_token','device_type'=>'Users.device_type'])
                         ->contain(['Users' => function($q) {
-                                return $q->select(['id','device_token'=>'device_token','device_type'=>'device_type'])->where(['device_token !=' => '']);
+                                return $q->select(['id'=>'Users.id','device_token'=>'device_token','device_type'=>'device_type'])->where(['device_token !=' => '']);
                             }])
                         ->hydrate(false)
                         ->toArray();
@@ -302,7 +395,7 @@ class DefaultComponent extends Component {
                     curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
                     curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($fields));
                     $result = curl_exec($ch);
-
+                   
                     curl_close($ch);
                 }
             }
@@ -315,7 +408,10 @@ class DefaultComponent extends Component {
     }
 
     function getCommission($cat = null) {
-        $result = TableRegistry::get('property_commisions')->find()->where(['category' => $cat, 'status' => '1', 'role_id IN ' => ['2,3']])->first();
+        $result = TableRegistry::get('property_commisions')->find()
+                ->where(['category' => $cat, 'status' => '1', 'role_id IN ' => ['2,3']])
+                ->hydrate(false)
+                ->first();
 
         if (!empty($result)) {
             return number_format($result['commision'], 2, '.', '');
@@ -324,8 +420,98 @@ class DefaultComponent extends Component {
         }
     }
     
+    function heigherBidNotification($id = null,$price = null){
+        $userdata = TableRegistry::get('property_autobids')
+                ->find()
+                ->contain(['Users'])
+                ->select(['device_token'=>'Users.device_token','device_type'=>'Users.device_type'])
+                ->hydrate(false)
+                ->where(['property_id' => $id , 'price <' => $price, 'Users.device_token !=' => ''])
+                ->toArray();
+        
+            $message['title'] = 'Okbid Notification';
+            $message['body'] = 'Please place bid more than '.$price;
+            $aps['id'] = $id;
+            $aps['type'] = 'general';
+            $this->pushnotification($message, $userdata, $aps);
+       
+    }
+    
+    function autobid($data = null , $user_id = null){
+        $result = TableRegistry::get('property_autobids')
+                ->find()
+                ->select(['property_id','user_id','price'])
+                ->where(['property_id' => $data['id'] , 'user_id !=' => $user_id , 'price >'=> $data['price']])
+                ->hydrate(false)
+                ->order('price','asc')
+                ->toArray();
+        
+        if(!empty($result)){
+            $this->propertybid = TableRegistry::get('property_bids');
+            
+            foreach ($result as $key=>$val){
+                 $results = $this->propertybid->find()
+                        ->where(['property_id' => $val['property_id'] , 'user_id' => $val['user_id']])
+                        ->select(['price'=>'max(price)','user_id','property_id'])
+                        ->hydrate(false)
+                        ->last();
+               
+                $this->placebid($results ,$val['price']);
+            }
+        }
+    }
+    
+    function placebid($data = null , $highest = null)
+    {
+        $x = 1; 
+        $this->propertybid = TableRegistry::get('property_bids');
+        $this->properties = TableRegistry::get('properties');
+        
+        
+        /* get maximum bid for property */
+        $result = $this->propertybid->find()
+                ->where(['property_id' => $data['property_id']])
+                ->select(['amount' => 'MAX(price)','user_id'])
+                ->hydrate(false)
+                ->first();
+       
+        
+         $updateprice = $data['price']+AUTOBID;
+         
+        
+        while($x <= 4) {
+             
+            if(($updateprice >  $result['amount']) && ($updateprice <= $highest)){
+                $entity = $this->propertybid->newEntity();
+                $entity['property_id'] = $data['property_id'];
+                $entity['user_id'] = $data['user_id'];
+                $entity['status'] = '1';
+                $entity['price'] = $updateprice;
+
+                if($this->propertybid->save($entity)){               
+
+                    if(TableRegistry::get('properties')->updateAll(['updated_price' => $updateprice], ['id' => $data['property_id']])){
+                       break;
+                    }
+                }
+            }else{
+                 $updateprice = $updateprice+AUTOBID;
+            }
+            $x++;
+        }
+    }
+            
     function getView($id = null , $user_id = null){
         return $result = TableRegistry::get('property_views')->find()->where(['user_id'=> $user_id, 'property_id' => $id])->count();
+        
+    }
+    
+    function getisAutoBidApplied($id = null , $user_id = null){
+        return $result = TableRegistry::get('property_autobids')->find()->where(['user_id'=> $user_id, 'property_id' => $id])->count();
+    }
+    
+    function getsigned($id = null , $user_id = null){
+        return $result = TableRegistry::get('property_signatures')->find()->where(['user_id'=> $user_id, 'property_id' => $id])->count();
     }
 
     public function Cleanstring($str, $options = array()) {

@@ -72,7 +72,9 @@
                                 <td class="actions">
                                     <?= $this->Html->link(__('<i class="fa fa-fw fa-eye"></i> View'), ['action' => 'view', $project->id], ['class' => 'btn btn-primary btn-sm', 'escape' => false]) ?>
                                     <?= $this->Html->link(__('<i class="fa fa-edit"></i> Edit'), ['action' => 'edit', $project->id], ['class' => 'btn btn-success btn-sm', 'escape' => false]) ?>
+                                    <?php if (in_array($this->request->session()->read('Auth.admin.role_id'), array('1'))) { ?>
                                     <?= $this->Form->postLink('<i class="fa fa-trash"></i> Delete', ['action' => 'delete', $project->id], ['confirm' => __('Are you sure you want to delete # {0}?', $project->id), 'class' => 'btn btn-danger btn-sm', 'escape' => false]) ?>
+                                    <?php } ?> 
                                 </td>
                             </tr>
                             <?php endforeach;

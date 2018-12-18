@@ -18,6 +18,10 @@ class CategoriesController extends AppController
      */
     public function index()
     {
+        $this->paginate = [
+            'finder' => ['common' => ['searchKeyword' => $this->request->query]],
+            'limit'=> $this->SettingConfig['admin_paging_limit']
+        ];
         $categories = $this->paginate($this->Categories);
 
         $this->set(compact('categories'));

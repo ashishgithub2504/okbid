@@ -69,31 +69,40 @@
 <body>
     <div>
         <div class="col-sm-12">
-            <h2>Global Messages <?= $this->Html->link('Back',['controller'=>'conversations','action'=>'index'],['class'=>'btn btn-primary float-right']); ?></h2>
-            
-            <div style="height:450px; overflow:scroll;">
-            
-            <?php echo $this->Form->create(); ?>
-            <div class="containernew">
-                <?= $this->Form->input('message',['type'=>'text','class'=>'textarea',"placeholder"=>"Type here!",'label'=>false]); ?>
-                <?= $this->Form->input('Send',['type'=>'submit','class'=>'btn btn-primary classsubmit','div'=>FALSE]); ?>
-            </div>
-            <?php echo $this->Form->end(); ?>
+            <h2>Global Messages <?= $this->Html->link('Back', ['controller' => 'conversations', 'action' => 'index'], ['class' => 'btn btn-primary float-right']); ?></h2>
+
+            <div>
+                <span style="background-color: #fff;margin: 10px;float: left;width: 98%;color: #000;">
+                    <?php
+                    if (!empty($globelmessage)) {
+                        foreach ($globelmessage as $key => $val) {
+                            echo '<p>' . $val['message'] . '</p>';
+                        }
+                    }
+                    ?>
+                </span>
+
+                <?php echo $this->Form->create(); ?>
+                <div class="containernew" style="padding-top: 55px;">
+                    <?= $this->Form->input('message', ['type' => 'text', 'class' => 'textarea', "placeholder" => "Type here!", 'label' => false]); ?>
+                    <?= $this->Form->input('Send', ['type' => 'submit', 'class' => 'btn btn-primary classsubmit', 'div' => FALSE]); ?>
+                </div>
+                <?php echo $this->Form->end(); ?>
             </div>
         </div>
     </div>
- 
-<style type="text/css">        
-.classsubmit{    
-    position: absolute;
-    top: 16px;
-    right: 19px;
-    padding: 2px;
-    height: 40px;
-    width: 100px;
-}
-.containernew{ position: relative; margin-top: 5px; }
-.containernew p { float: left; }
-.content-wrapper{ height: 100%; }
-.float-right{ float: right; }
-</style>
+
+    <style type="text/css">        
+        .classsubmit{    
+            position: absolute;
+            top: 16px;
+            right: 19px;
+            padding: 2px;
+            height: 40px;
+            width: 100px;
+        }
+        .containernew{ margin-top: 5px; }
+        .containernew p { float: left; }
+        .content-wrapper{ height: 100%; }
+        .float-right{ float: right; }
+    </style>

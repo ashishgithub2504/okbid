@@ -77,6 +77,11 @@ class PropertiesTable extends Table
             'foreignKey' => 'property_id'
         ]);
         
+        $this->hasOne('PropertyBidsOne', [
+            'className' => 'property_bids',
+            'foreignKey' => 'property_id'
+        ]);
+        
         $this->hasOne('PropertyRejects', [
             'foreignKey' => 'property_id'
         ]);
@@ -263,7 +268,9 @@ class PropertiesTable extends Table
         return $validator;
         
     }
-
+    
+    
+    
     /**
      * Returns a rules checker object that will be used for validating
      * application integrity.
@@ -291,7 +298,7 @@ class PropertiesTable extends Table
         if (!empty($searchKeyword['status']) && trim($searchKeyword['status'])) {
               $query->where(['Properties.status' => trim($searchKeyword['status'])]);
         }
-        if (!empty($searchKeyword['handling']) && trim($searchKeyword['handling'])) {
+        if (isset($searchKeyword['handling'])) {
               $query->where(['Properties.handling' => trim($searchKeyword['handling'])]);
         }
         if (!empty($searchKeyword['no_of_room']) && trim($searchKeyword['no_of_room'])) {
@@ -321,13 +328,13 @@ class PropertiesTable extends Table
     
     public function findFilter(Query $query , array $options){
         $searchKeyword = $options['searchKeyword'];
-        
+         $query->contain(['PropertyImages']);
         if (!empty($searchKeyword['category']) && trim($searchKeyword['category'])) {
               $query->where(['Properties.category IN ' => explode(',',$searchKeyword['category'])]);
         }
         
         if (!empty($searchKeyword['minprice']) && !empty($searchKeyword['maxprice'])) {
-              $query->where(['Properties.price >=' => trim($searchKeyword['minprice']) , 'Properties.price <' => trim($searchKeyword['maxprice'])]);
+              $query->where(['Properties.updated_price >=' => trim($searchKeyword['minprice']) , 'Properties.updated_price <' => trim($searchKeyword['maxprice'])]);
         }
         if (!empty($searchKeyword['minroom']) && !empty($searchKeyword['maxroom'])) {
               $query->where(['Properties.no_of_room >=' => trim($searchKeyword['minroom']) , 'Properties.no_of_room <=' => trim($searchKeyword['maxroom'])]);
@@ -344,6 +351,12 @@ class PropertiesTable extends Table
         if (!empty($searchKeyword['property_condition'])) {
               $query->where(['Properties.property_condition IN ' => explode(',', $searchKeyword['property_condition'])]);
         }
+        if (!empty($searchKeyword['country'])) {
+              $query->where(['Properties.country IN ' => explode(',', $searchKeyword['country'])]);
+        }
+        if (!empty($searchKeyword['state'])) {
+              $query->where(['Properties.state IN ' => explode(',', $searchKeyword['state'])]);
+        }
         if (!empty($searchKeyword['evaculation_date'])) {
               $query->where(['Properties.evaculation_date' => $searchKeyword['evaculation_date']]);
         }
@@ -356,6 +369,9 @@ class PropertiesTable extends Table
         }
         if (isset($searchKeyword['storage'])) {
               $query->where(['Properties.storage' => $searchKeyword['storage']]);
+        }
+        if (isset($searchKeyword['disable_access'])) {
+              $query->where(['Properties.disable_access' => $searchKeyword['disable_access']]);
         }
         if (isset($searchKeyword['bars'])) {
               $query->where(['Properties.bars' => $searchKeyword['bars']]);

@@ -4,8 +4,15 @@
  * @var \App\View\AppView $this
  */
 use Cake\Core\Configure;
+if (in_array($this->request->session()->read('Auth.admin.role_id'), array('1', '5'))) { 
+    $fixedfilter = 'fixedfilter';
+    $top180 = 'top180';
+}else{
+    $fixedfilter = '';
+    $top180 = '';
+}
 ?>
-<section class="content-header">
+<section class="content-header topheader">
     <h1>
         Manage Properties
         <small>All Properties List</small>
@@ -18,9 +25,10 @@ use Cake\Core\Configure;
 <?php echo $this->Flash->render(); ?>
         </div>
     </div>
+    
     <div class="row">
         <div class="col-xs-12">
-            <div class="box">
+            <div class="box <?= $fixedfilter; ?>">
                 <div class="box-header">
                     <h3 class="box-title"><i class="fa fa-fw fa-circle-o"></i> 
                         <span class="caption-subject font-green bold uppercase">Total InActive Properties : <?= count($properties); ?></span>
@@ -47,6 +55,7 @@ use Cake\Core\Configure;
                                         'templates' => [
                                             'inputContainer' => '<div class="col-md-4 input {{type}}{{required}}">{{content}}</div>',
                                         ],
+                                        'autocomplete' => 'off',
                                         'placeholder' => 'City Name',
                                         'label' => false,
                                         'value' => !empty($this->request->query['city']) ? $this->request->query['city'] : ''
@@ -58,6 +67,7 @@ use Cake\Core\Configure;
                                         'templates' => [
                                             'inputContainer' => '<div class="col-md-4 input {{type}}{{required}}">{{content}}</div>',
                                         ],
+                                        'autocomplete' => 'off',
                                         'label' => false,
                                         'placeholder' => 'No Of Room',
                                         'value' => !empty($this->request->query['no_of_room']) ? $this->request->query['no_of_room'] : ''
@@ -68,6 +78,7 @@ use Cake\Core\Configure;
                                         'templates' => [
                                             'inputContainer' => '<div class="col-md-4 input {{type}}{{required}}">{{content}}</div>',
                                         ],
+                                        'autocomplete' => 'off',
                                         'placeholder' => 'From price',
                                         'label' => false,
                                         'value' => !empty($this->request->query['fromprice']) ? $this->request->query['fromprice'] : ''
@@ -78,6 +89,7 @@ use Cake\Core\Configure;
                                         'templates' => [
                                             'inputContainer' => '<div class="top5 col-md-4 input {{type}}{{required}}">{{content}}</div>',
                                         ],
+                                        'autocomplete' => 'off',
                                         'placeholder' => 'To Price',
                                         'label' => false,
                                         'value' => !empty($this->request->query['toprice']) ? $this->request->query['toprice'] : ''
@@ -88,6 +100,7 @@ use Cake\Core\Configure;
                                         'templates' => [
                                             'inputContainer' => '<div class="top5 col-md-4 input {{type}}{{required}}">{{content}}</div>',
                                         ],
+                                        'autocomplete' => 'off',
                                         'placeholder' => 'User Name',
                                         'options' => ['10' => 'Up to 10 days', '30' => 'Up to 30 days', '50' => 'Up to 50 days', '70' => 'Up to 70 days'],
                                         'empty' => 'How long (in days) since the property published',
@@ -101,6 +114,7 @@ use Cake\Core\Configure;
                                         'templates' => [
                                             'inputContainer' => '<div class="top5 col-md-4 input {{type}}{{required}}">{{content}}</div>',
                                         ],
+                                        'autocomplete' => 'off',
                                         'label' => false,
                                         'options' => $list,
                                         'empty' => 'Select User',
@@ -110,7 +124,7 @@ use Cake\Core\Configure;
                                     ?>
 
                                     <div class="input-group-btn col-md-3 ">
-                                        <?php echo $this->Form->button('<i class="fa fa-search"></i> Search', ['class' => 'btn btn-sm btn-default top5', 'type' => 'Submit', 'escape' => false]); ?>
+                                        <?php echo $this->Form->button('<span class="glyphicon glyphicon-search"></span> Search', ['class' => 'btn btn-sm btn-primary top5', 'type' => 'Submit', 'escape' => false]); ?>
                                     </div>
                                 </div>
                             </div>
@@ -119,8 +133,10 @@ use Cake\Core\Configure;
                         </div>
                     </div>
                 <?php } ?>
-
-                <div class="box-body table-responsive no-padding">
+            </div>
+            
+            <div class="box <?= $top180; ?>">
+                <div class="box-body table-responsive no-padding tablescroll">
                     <table class="table table-hover">
                         <thead>
                             <tr>
@@ -164,10 +180,14 @@ use Cake\Core\Configure;
                                         <td>
                                             <?php
                                             if ($property->propertytype_id != 0) {
-                                                echo Configure::read('PROTY' . LAN)[$property->propertytype_id];
+                                                echo $this->Custom->getPropertyType($property->propertytype_id);
                                             }
                                             ?></td>
-                                        <td><?= $property->country . ' ,' . $property->state . ' ,' . $property->city . ' ,' . $property->neighbourhood . ' ,' . $property->street; ?></td>
+                                        <td>
+                                        <?php
+                                            echo $this->Custom->getAddress($property);
+                                        ?>
+                                        </td>
                                         <td><?= $property->city; ?></td>
                                         <td><?= $property->no_of_room . ' Rooms'; ?></td>
                                         <td><?= $property->area; ?></td>
@@ -179,7 +199,9 @@ use Cake\Core\Configure;
                                             <?= $this->Html->link(__('<i class="fa fa-fw fa-eye"></i> Graph'), ['action' => 'graph', $property->id], ['class' => 'btn btn-warning btn-sm', 'escape' => false]) ?>
                                             <?php if (in_array($this->request->session()->read('Auth.admin.role_id'), array('1', '5'))) { ?>
                                                 <?= $this->Html->link(__('<i class="fa fa-fw fa-eye"></i> Assign'), ['action' => 'assign', $property->id], ['data-toggle' => "modal", 'data-target' => "#myModal", 'class' => 'btn  btn-info btn-sm', 'escape' => false]) ?>
-                                                <?= $this->Form->postLink('<i class="fa fa-trash"></i> Delete', ['action' => 'delete', $property->id], ['confirm' => __('Are you sure you want to delete # {0}?', $property->id), 'class' => 'btn btn-danger btn-sm', 'escape' => false]) ?>
+                                                <?php if (in_array($this->request->session()->read('Auth.admin.role_id'), array('1'))) { ?>
+                                                    <?= $this->Form->postLink('<i class="fa fa-trash"></i> Delete', ['action' => 'delete', $property->id,'inactive'], ['confirm' => __('Are you sure you want to delete # {0}?', $property->id), 'class' => 'btn btn-danger btn-sm', 'escape' => false]) ?>
+                                                <?php } ?>
                                             <?php } ?>
 
                                         </td>

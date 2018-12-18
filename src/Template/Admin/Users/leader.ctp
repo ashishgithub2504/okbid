@@ -2,6 +2,7 @@
 /**
   * @var \App\View\AppView $this
   */
+use Cake\Core\Configure;
 ?>
 <section class="content-header">
     <h1>
@@ -47,6 +48,7 @@
                                                 'inputContainer' => '<div class="col-md-4 input {{type}}{{required}}">{{content}}</div>',
                                             ],
                                             'placeholder' => 'Leader Name', 
+                                            'autocomplete' => 'off',
                                             'label' => false, 
                                             'value' => !empty($this->request->query['keyword']) ? $this->request->query['keyword'] : ''
                                     ]); ?>
@@ -56,6 +58,7 @@
                                     'templates' => [
                                         'inputContainer' => '<div class="col-md-4 input {{type}}{{required}}">{{content}}</div>',
                                     ],
+                                    'autocomplete' => 'off',
                                     'placeholder' => 'City Name',
                                     'label' => false,
                                     'value' => !empty($this->request->query['city']) ? $this->request->query['city'] : ''
@@ -80,6 +83,7 @@
                                     'templates' => [
                                         'inputContainer' => '<div class="col-md-4 top5 input {{type}}{{required}}">{{content}}</div>',
                                     ],
+                                    'autocomplete' => 'off',
                                     'placeholder' => 'From Price',
                                     'label' => false,
                                     'value' => !empty($this->request->query['fromprice']) ? $this->request->query['fromprice'] : ''
@@ -90,6 +94,7 @@
                                     'templates' => [
                                         'inputContainer' => '<div class="col-md-4 top5 input {{type}}{{required}}">{{content}}</div>',
                                     ],
+                                    'autocomplete' => 'off',
                                     'placeholder' => 'To Price',
                                     'label' => false,
                                     'value' => !empty($this->request->query['toprice']) ? $this->request->query['toprice'] : ''
@@ -101,6 +106,7 @@
                                             'templates' => [
                                                 'inputContainer' => '<div class="top5 col-md-4 input {{type}}{{required}}">{{content}}</div>',
                                             ],
+                                            'autocomplete' => 'off',
                                             'placeholder'=>'Getting started with OK leader',
                                             'label'=>false,
                                             'value'=> !empty($this->request->query['created']) ? $this->request->query['created'] : '',
@@ -112,6 +118,7 @@
                                     'templates' => [
                                         'inputContainer' => '<div class="col-md-4 top5 input {{type}}{{required}}">{{content}}</div>',
                                     ],
+                                    'autocomplete' => 'off',
                                     'options' => ['1'=>'Active','0'=>'In Active'],
                                     'label' => false,
                                     'value' => isset($this->request->query['status']) ? $this->request->query['status'] : ''
@@ -127,7 +134,10 @@
                         <?= $this->Form->end() ?>
                     </div>
                 </div>
-                <div class="box-body table-responsive no-padding">
+            </div>
+                
+                <div class="box">
+                <div class="box-body table-responsive no-padding tablescroll">
                     <table class="table table-hover">
                         <thead>
                             <tr>
@@ -151,14 +161,16 @@
                                 <?= $this->Html->link($user->name, ['controller' => 'Users', 'action' => 'view', $user->id]);?>
                                 </td>
                                 <td><?= h($user->email) ?></td>
-                                <td><?= $this->Number->format($user->phone) ?></td>
+                                <td><?= !empty($user->prefix)?$user->prefix:''; echo ' '. $user->phone ?></td>
                                 <td><?= $this->Custom->getLeaderAssignProperties($user->id); ?></td>
                                 <td><?= ($user->status == 1)?'Active':'Inactive'; ?></td>
                                 <td class="actions"  style="width:35%;">
-                                    <?= $this->Html->link(__('<i class="fa fa-fw fa-eye"></i> Property'), ['controller'=>'properties','action' => 'user-pro', $user->id], ['class' => 'btn btn-warning  btn-sm', 'escape' => false]) ?>
+                                    <?php echo $this->Html->link(__('<i class="fa fa-fw fa-eye"></i> Handle Property'), ['controller'=>'properties','action' => 'user-pro', $user->id], ['class' => 'btn btn-warning  btn-sm', 'escape' => false]) ?>
                                     <?php echo $this->Html->link(__('<i class="fa fa-fw fa-eye"></i> View'), ['action' => 'view', $user->id], ['class' => 'btn btn-primary btn-sm', 'escape' => false]) ?>
                                     <?= $this->Html->link(__('<i class="fa fa-comments-o"></i> Message'), ['action' => 'message', $user->id], ['class' => 'btn btn-sm btn-info','title'=>'Send message' ,'escape' => false]) ?>
-                                    <?= $this->Form->postLink('<i class="fa fa-trash"></i> Delete', ['action' => 'delete', $user->id], ['confirm' => __('Are you sure you want to delete # {0}?', $user->id), 'class' => 'btn btn-danger btn-sm', 'escape' => false]) ?>
+                                    <?php if (in_array($this->request->session()->read('Auth.admin.role_id'), array('1'))) { ?>
+                                        <?= $this->Form->postLink('<i class="fa fa-trash"></i> Delete', ['action' => 'delete', $user->id,'leader'], ['confirm' => __('Are you sure you want to delete # {0}?', $user->id), 'class' => 'btn btn-danger btn-sm', 'escape' => false]) ?>
+                                    <?php } ?>
                                 </td>
                             </tr>
                             <?php endforeach;

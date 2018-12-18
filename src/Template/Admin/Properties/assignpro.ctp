@@ -42,6 +42,7 @@ use Cake\Core\Configure;
                                     'templates' => [
                                         'inputContainer' => '<div class="col-md-4 input {{type}}{{required}}">{{content}}</div>',
                                     ],
+                                    'autocomplete' => 'off',
                                     'placeholder' => 'User Name',
                                     'label' => false,
                                     'value' => !empty($this->request->query['keyword']) ? $this->request->query['keyword'] : ''
@@ -108,7 +109,7 @@ use Cake\Core\Configure;
                                             <?php
                                             echo $property->city;
                                             if ($property->propertytype_id != 0) {
-                                                echo Configure::read('PROTY' . LAN)[$property->propertytype_id];
+                                                echo $this->Custom->getPropertyType($property->propertytype_id);
                                             }
                                             echo ' ' . $property->no_of_room . ' Rooms';
                                             ?></td>
@@ -123,8 +124,9 @@ use Cake\Core\Configure;
                                                 <?= $this->Html->link(__('<i class="fa fa-fw fa-eye"></i> Assign'), ['action' => 'assign', $property->id], ['data-toggle' => "modal", 'data-target' => "#myModal", 'class' => 'btn btn-primary btn-sm', 'escape' => false]) ?>
                                             <?php } ?>
                                             <?= $this->Html->link(__('<i class="fa fa-fw fa-eye"></i> Graph'), ['action' => 'graph', $property->id], ['class' => 'btn btn-info btn-sm', 'escape' => false]) ?>
-
+                                            <?php if (in_array($this->request->session()->read('Auth.admin.role_id'), array('1'))) { ?>
                                             <?= $this->Form->postLink('<i class="fa fa-trash"></i> Delete', ['action' => 'delete', $property->id], ['confirm' => __('Are you sure you want to delete # {0}?', $property->id), 'class' => 'btn btn-danger btn-sm', 'escape' => false]) ?>
+                                            <?php } ?> 
                                         </td>
                                     </tr>
                                     <?php

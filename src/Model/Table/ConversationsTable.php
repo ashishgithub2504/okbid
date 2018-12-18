@@ -93,4 +93,12 @@ class ConversationsTable extends Table
 
         return $rules;
     }
+    
+    public function findCommon(Query $query, array $options) {
+        $searchKeyword = $options['searchKeyword'];
+        if (!empty($searchKeyword['title']) && trim($searchKeyword['title'])) {
+              $query->where(['Conversations.title LIKE' => '%' .  trim($searchKeyword['title']) . '%' ]);
+        }
+        return $query;
+    }
 }

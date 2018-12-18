@@ -297,14 +297,6 @@ use Cake\Core\Configure;
                                 </div>
                             </div>
 
-                            <?php if (in_array($this->request->session()->read('Auth.admin.role_id'), array('1', '5'))) { ?>
-                                <div class="col-md-6">
-                                    <div class="form-group">         
-                                        <?php echo $this->Form->input('handling', ['class' => 'form-control', 'options' => Configure::read('HANDING' . LAN), 'placeholder' => ucfirst('HANDING status'), 'label' => ['text' => ucfirst('Handing Status'), 'class' => 'req']]); ?>
-                                    </div>
-                                </div>
-                            <?php } ?>
-
                         </div>
 
 

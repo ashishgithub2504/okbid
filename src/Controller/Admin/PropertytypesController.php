@@ -19,6 +19,8 @@ class PropertytypesController extends AppController
     public function index()
     {
         $this->paginate = [
+            'finder' => ['common' => ['searchKeyword' => $this->request->query]],
+            'limit'=> $this->SettingConfig['admin_paging_limit'],
             'contain' => ['Categories']
         ];
         $propertytypes = $this->paginate($this->Propertytypes);

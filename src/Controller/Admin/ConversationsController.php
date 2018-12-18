@@ -13,6 +13,8 @@ class ConversationsController extends AppController
     public function initialize() {
         parent::initialize();
         $this->Users = TableRegistry::get('users');
+        $title = isset($_GET['title'])?'1':'0';
+        $this->set(compact('title'));
     }
 
     /**
@@ -24,14 +26,36 @@ class ConversationsController extends AppController
     {
         
         $this->paginate = [
-            'contain' => ['Users']
+            'contain' => []
         ];
+        $options['contain'] = ['Users'];
+        $options['order'] = ['Conversations.id' => 'DESC'];
+        $options['limit'] = $this->SettingConfig['admin_paging_limit'];
+        $options['finder'] = ['common' => ['searchKeyword' => $this->request->query]];
+        
+        $this->paginate = $options;
+        
         $conversations = $this->paginate($this->Conversations);
-
+        
         $this->set(compact('conversations'));
         $this->set('_serialize', ['conversations']);
     }
 
+    public function indexload()
+    {
+        
+        $this->paginate = [
+            'contain' => ['Users'],
+            'order' => [
+                'Conversations.id' => 'DESC'                
+            ]
+        ];
+        $conversations = $this->paginate($this->Conversations);
+        
+        $this->set(compact('conversations'));
+        $this->set('_serialize', ['conversations']);
+    }
+    
     /**
      * View method
      *
@@ -119,14 +143,25 @@ class ConversationsController extends AppController
     
     public function globalmessage()
     {
+        $obj = TableRegistry::get('globals');
         if(!empty($this->request->data)){
             $message['title']= 'Okbid Notification';
-            $message['body']= $this->request->data['message'];
+            $message['body']= $this->request->data['message'];            
+            $entity = $obj->newEntity();
+            $entity->user_id = $this->Auth->user('id');
+            $entity->message = $this->request->data['message'];
+            $entity->status = '1';
+            $entity->created = date('Y-m-d h:i:s');
+            $obj->save($entity);
             $userinfo = TableRegistry::get('users')->find()->select(['device_token','device_type'])->hydrate(false)->where(['status'=>'1','device_token !='=>''])->toArray();
-            $this->Default->pushnotification( $message,$userinfo );
+            $aps['type'] = 'general';
+            $this->Default->pushnotification( $message,$userinfo,$aps );
             $this->Flash->success(__('Global notification has been sent'));
             $this->redirect(['controller'=>'conversations','action'=>'globalmessage']);
         }
+        $globelmessage = $obj->find()->where(['status' => '1'])->toArray();
+        
+        $this->set('globelmessage',$globelmessage);
     }
     
     public function message($id = null)
@@ -135,12 +170,16 @@ class ConversationsController extends AppController
         
         $obj = TableRegistry::get('conversations');
         
-        $messages = $obj->find()
+        $mess = $obj->find()
                 ->where(['id'=>$id])
                 ->contain(['Chats'])
-                ->hydrate(false)->first();
-        //pr($messages); die;
+                ->hydrate(false)
+                ->first();
+        
         $auth = $this->Auth->user('id');
+        
+        $obj->updateAll(['is_read'=>'1'],['id'=>$id]);
+        
         if(!empty($this->request->data)){
             
             $chat = TableRegistry::get('chats');
@@ -160,12 +199,63 @@ class ConversationsController extends AppController
                 
                 $message['title'] = 'Okbid notification';
                 $message['body'] = 'You have got new message';
-                $this->Default->pushnotification($message,$token);
+                $aps['type'] = 'chat';
+                $aps['id'] = $id;
+                
+                $this->Default->pushnotification($message,$token,$aps);
                 $this->Flash->success(__('Message has been sent successfully'));
                 return $this->redirect(['controller'=>'conversations','action'=>'message/'.$id]);
             }
         }
-        $this->set(compact('messages','auth'));
+        
+        $this->set(compact('mess','auth','id'));
+    }
+    
+     public function messageload($id = null)
+    {
+        $response = array();
+        
+        $obj = TableRegistry::get('conversations');
+        
+        $mess = $obj->find()
+                ->where(['id'=>$id])
+                ->contain(['Chats'])
+                ->hydrate(false)
+                ->first();
+        
+        $auth = $this->Auth->user('id');
+        
+        $obj->updateAll(['is_read'=>'1'],['id'=>$id]);
+        
+        if(!empty($this->request->data)){
+            
+            $chat = TableRegistry::get('chats');
+            $entity = $chat->newEntity();
+            $entity->sender_id = $this->Auth->user('id');
+            $entity->conversation_id = $id;
+            //$entity->receiver_id = $id;
+            $entity->chat = $this->request->data['message'];
+            $entity->is_read = 0;
+            $entity->status = 1;
+            
+            if($chat->save($entity)){
+                $obj->updateAll(['message'=>$this->request->data['message']],['id'=>$id]);
+                $token = $this->Users->find()
+                        ->select(['device_token','device_type'])->hydrate(false)
+                        ->where(['id'=>$this->request->data['user_id'],'status'=>'1','device_token !='=>''])->toArray();
+                
+                $message['title'] = 'Okbid notification';
+                $message['body'] = 'You have got new message';
+                $aps['type'] = 'chat';
+                $aps['id'] = $id;
+                
+                $this->Default->pushnotification($message,$token,$aps);
+                $this->Flash->success(__('Message has been sent successfully'));
+                return $this->redirect(['controller'=>'conversations','action'=>'message/'.$id]);
+            }
+        }
+        
+        $this->set(compact('mess','auth'));
     }
     
 }

@@ -32,7 +32,8 @@ class ImagesTable extends Table
     public function initialize(array $config)
     {
         parent::initialize($config);
-        $this->_dir = 'uploads' . DS . 'images' . DS;
+        $this->_dir = 'uploads' . DS . 'document' . DS;
+        
         
         $this->table('images');
         $this->displayField('title');

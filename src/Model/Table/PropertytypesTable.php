@@ -64,10 +64,7 @@ class PropertytypesTable extends Table
             ->requirePresence('name', 'create')
             ->notEmpty('name');
 
-        $validator
-            ->requirePresence('namehr', 'create')
-            ->notEmpty('namehr');
-
+       
         $validator
             ->integer('status')
             ->requirePresence('status', 'create')
@@ -88,5 +85,14 @@ class PropertytypesTable extends Table
         $rules->add($rules->existsIn(['category_id'], 'Categories'));
 
         return $rules;
+    }
+    
+    public function findCommon(Query $query, array $options) {
+        $searchKeyword = $options['searchKeyword'];
+        if (!empty($searchKeyword['keyword']) && trim($searchKeyword['keyword'])) {
+              $query->where(['OR'=>['Propertytypes.name LIKE' => '%' .  trim($searchKeyword['keyword']) . '%' , 'Propertytypes.namehe LIKE' => '%' .  trim($searchKeyword['keyword']) . '%' ]]);
+        }
+        
+        return $query;
     }
 }

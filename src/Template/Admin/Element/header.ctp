@@ -8,93 +8,111 @@
         <a href="#" class="sidebar-toggle" data-toggle="offcanvas" role="button">
             <span class="sr-only">Toggle navigation</span>
         </a>
-        <div class="navbar-custom-menu">
-            <ul class="nav navbar-nav">
-                <?php if (in_array($this->request->session()->read('Auth.admin.role_id'), array('1', '5'))) { ?>`
-                    <li class="dropdown dropdown-extended dropdown-notification" id="header_notification_bar">
-                        <a href="javascript:;" class="dropdown-toggle label label-sm label-icon" data-toggle="dropdown" data-hover="dropdown" data-close-others="true" aria-expanded="true">
-                            <i class="fa fa-bell" style="font-size:18px"></i>
-                            <span class="badge badge-default" style="position:absolute; top:6px; left: 30px;"> <?= count($pendingproty); ?> </span>
-                        </a>
-                        <ul class="dropdown-menu" style="width:300px;">
-                            
-                            <li class="external">
-                                <h3>
-                                    <span class="bold" style="margin-left:20px;"><?= count($pendingproty); ?>  pending</span> Properties</h3>
-                            </li>
-                            <li>
-                                <div class="slimScrollDiv" style="position: relative; overflow: hidden; width: auto; height: 250px;">
-                                    <ul class="dropdown-menu-list scroller" style="height: 250px; overflow: hidden; width: auto;" data-handle-color="#637283" data-initialized="1">
-                                        <?php
-                                        if (!empty($pendingproty)) {
-                                            foreach ($pendingproty as $key => $val) {
-                                                ?>
-                                                <li>
-                                                    <a href="<?= _BASE_; ?>admin/properties/view/<?= $key; ?>">
 
-                                                        <span class="details">
-                                                            <span class="label label-sm label-icon label-success">
-            <?= $val; ?>
-                                                            </span> </span>
+<?php if (in_array($this->request->session()->read('Auth.admin.role_id'), array('1', '2','3','4','5','6'))) { ?>`
+            <div class="navbar-custom-menu">
+                <ul class="nav navbar-nav">
+                    <?php if (in_array($this->request->session()->read('Auth.admin.role_id'), array('1'))) { ?>`
+                    <!-- Messages: style can be found in dropdown.less-->
+                    <li class="dropdown messages-menu">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                            <i class="fa fa-envelope-o"></i>
+                            <span class="label label-success"><?= count($msgnotification); ?></span>
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li class="header">You have <?= count($msgnotification); ?> messages</li>
+                            <li>
+                                <!-- inner menu: contains the actual data -->
+                                <ul class="menu">
+                                    <?php if(!empty($msgnotification)){
+                                            foreach($msgnotification as $key=>$val){ ?>
+                                                <li><!-- start message -->
+                                                    <a href="<?= _BASE_.'admin/conversations/message/'.$val['id']; ?>">
+                                                        <div class="pull-left">
+                                                            <?php echo $this->Html->image('/uploads/users/'.$val['user']['profile_pic'],['class'=>'img-circle']); ?>
+                                                        </div>
+                                                        <h4>
+                                                            <?= $val['title']; ?>
+<!--                                                            <small><i class="fa fa-clock-o"></i> 5 mins</small>-->
+                                                        </h4>
+                                                        <p><?= $val['message']; ?></p>
                                                     </a>
                                                 </li>
-        <?php }
-    } ?>
-                                    </ul><div class="slimScrollBar" style="background: rgb(99, 114, 131) none repeat scroll 0% 0%; width: 7px; position: absolute; top: 0px; opacity: 0.4; display: none; border-radius: 7px; z-index: 99; right: 1px; height: 121.359px;"></div><div class="slimScrollRail" style="width: 7px; height: 100%; position: absolute; top: 0px; display: none; border-radius: 7px; background: rgb(234, 234, 234) none repeat scroll 0% 0%; opacity: 0.2; z-index: 90; right: 1px;"></div></div>
+                                    <?php }
+                                    } ?>
+                                    
+                                </ul>
                             </li>
+                            <li class="footer"><?php echo $this->Html->link('See All Messages',['controller'=>'conversations','action'=>'index']) ?></li>
                         </ul>
                     </li>
-                <?php } ?>
 
-<?php if (in_array($this->request->session()->read('Auth.admin.role_id'), array('3'))) { ?>`
-                    <li class="dropdown dropdown-extended dropdown-notification" id="header_notification_bar">
-                        <a href="javascript:;" class="dropdown-toggle label label-sm label-icon" data-toggle="dropdown" data-hover="dropdown" data-close-others="true" aria-expanded="true">
-                            <i class="fa fa-bell" style="font-size:18px"></i>
-                            <span class="badge badge-default" style="position:absolute; top:7px;"> <?= count($assignproty); ?> </span>
+                    <!-- Notifications: style can be found in dropdown.less -->
+                    <li class="dropdown notifications-menu">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                            <i class="fa fa-bell-o"></i>
+                            <span class="label label-warning"><?= count($messages); ?></span>
                         </a>
-                        <ul class="dropdown-menu" style="width:300px;">
-                            <li class="external">
-                                <h3>
-                                    <span class="bold" style="margin-left:20px;"><?= count($assignproty); ?>  Assign</span> Properties</h3>
-                            </li>
+                        <ul class="dropdown-menu">
+                            <li class="header">You have <?= count($messages); ?> notifications</li>
                             <li>
-                                <div class="slimScrollDiv" style="position: relative; overflow: hidden; width: auto; height: 250px;">
-                                    <ul class="dropdown-menu-list scroller" style="height: 250px; overflow: hidden; width: auto;" data-handle-color="#637283" data-initialized="1">
-                                        <?php
-                                        if (!empty($assignproty)) {
-                                            foreach ($assignproty as $key => $val) {
-                                                ?>
-                                                <li>
-                                                    <a href="<?= _BASE_; ?>admin/properties/view/<?= $key; ?>">
-
-                                                        <span class="details">
-                                                            <span class="label label-sm label-icon label-success">
-
-                                                <?= $val; ?>
-                                                            </span> </span>
-                                                    </a>
-                                                </li>
-        <?php }
-    } ?>
-                                    </ul><div class="slimScrollBar" style="background: rgb(99, 114, 131) none repeat scroll 0% 0%; width: 7px; position: absolute; top: 0px; opacity: 0.4; display: none; border-radius: 7px; z-index: 99; right: 1px; height: 121.359px;"></div><div class="slimScrollRail" style="width: 7px; height: 100%; position: absolute; top: 0px; display: none; border-radius: 7px; background: rgb(234, 234, 234) none repeat scroll 0% 0%; opacity: 0.2; z-index: 90; right: 1px;"></div></div>
+                                <!-- inner menu: contains the actual data -->
+                                <ul class="menu">
+                                    <?php  if(!empty($messages)){
+                                                foreach ($messages as $message){ ?>
+                                            <li>
+                                                <?php echo $this->Html->link('<i class="fa fa-home text-aqua"></i> ' .$message['message'],['controller'=>$message['controller'] , 'action' => $message['action']],['escape'=>false]); ?>
+                                            </li>          
+                                    <?php      }
+                                    } ?>
+                                            
+<!--                                    <li>
+                                        <a href="#">
+                                            <i class="fa fa-users text-aqua"></i> 5 new members joined today
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a href="#">
+                                            <i class="fa fa-warning text-yellow"></i> Very long description here that may not fit into the
+                                            page and may cause design problems
+                                        </a>
+                                    </li>-->
+<!--                                    <li>
+                                        <a href="#">
+                                            <i class="fa fa-users text-red"></i> 5 new members joined
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a href="#">
+                                            <i class="fa fa-shopping-cart text-green"></i> 25 sales made
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a href="#">
+                                            <i class="fa fa-user text-red"></i> You changed your username
+                                        </a>
+                                    </li>-->
+                                </ul>
                             </li>
+                            <li class="footer"><a href="#">View all</a></li>
                         </ul>
                     </li>
-<?php } ?>
-
-                <li class="dropdown user user-menu">
+                    <?php } ?>
+                    
+                   <li class="dropdown user user-menu">
                     <!-- Menu Toggle Button -->
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown">
                         <!-- The user image in the navbar-->
                         <?php
                         if (!empty($userData['profile_pic']))
-                            echo $this->Html->image('/uploads/users/' . $userData['profile_pic'], ["class" => "user-image", "alt" => "User Image"]);
+                            echo $this->Html->image('/uploads/users/' . $userData['profile_pic'], ["class" => "user-image", "alt" => ""]);
                         else
                             echo $this->Html->image("avatar.png", ["class" => "user-image", "alt" => "User Image"]);
                         ?>
                         <!-- hidden-xs hides the username on small devices so only the image appears. -->
                         <span class="hidden-xs"><?php echo $userData['name']; ?></span>
                     </a>
+
                     <ul class="dropdown-menu">
 
 
@@ -121,10 +139,10 @@
                         </li>
                         <li class="user-footer">
                             <div class="col-xs-4 text-center">
-<?php echo $this->Html->link("Profile", ["controller" => "users", "action" => "profile_view"], ["class" => "btn btn-default btn-flat"]); ?>
+                                <?php echo $this->Html->link("Profile", ["controller" => "users", "action" => "profile_view"], ["class" => "btn btn-default btn-flat"]); ?>
                             </div>
                             <div class="col-xs-4 text-center">
-<?php echo $this->Html->link("Edit", ["controller" => "users", "action" => "profile"], ["class" => "btn btn-default btn-flat"]); ?>
+                                <?php echo $this->Html->link("Edit", ["controller" => "users", "action" => "profile"], ["class" => "btn btn-default btn-flat"]); ?>
                             </div>
                             <div class="col-xs-4 text-center">
 <?php echo $this->Html->link("Sign out", ["controller" => "users", "action" => "logout"], ["class" => "btn btn-default btn-flat"]); ?>
@@ -132,8 +150,85 @@
                         </li>
                     </ul>
                 </li>
-            </ul>
-        </div>
+                    <!-- Tasks: style can be found in dropdown.less -->
+                    <!--          <li class="dropdown tasks-menu">
+                                <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                                  <i class="fa fa-flag-o"></i>
+                                  <span class="label label-danger">9</span>
+                                </a>
+                                <ul class="dropdown-menu">
+                                  <li class="header">You have 9 tasks</li>
+                                  <li>
+                                     inner menu: contains the actual data 
+                                    <ul class="menu">
+                                      <li> Task item 
+                                        <a href="#">
+                                          <h3>
+                                            Design some buttons
+                                            <small class="pull-right">20%</small>
+                                          </h3>
+                                          <div class="progress xs">
+                                            <div class="progress-bar progress-bar-aqua" style="width: 20%" role="progressbar" aria-valuenow="20" aria-valuemin="0" aria-valuemax="100">
+                                              <span class="sr-only">20% Complete</span>
+                                            </div>
+                                          </div>
+                                        </a>
+                                      </li>
+                                       end task item 
+                                      <li> Task item 
+                                        <a href="#">
+                                          <h3>
+                                            Create a nice theme
+                                            <small class="pull-right">40%</small>
+                                          </h3>
+                                          <div class="progress xs">
+                                            <div class="progress-bar progress-bar-green" style="width: 40%" role="progressbar" aria-valuenow="20" aria-valuemin="0" aria-valuemax="100">
+                                              <span class="sr-only">40% Complete</span>
+                                            </div>
+                                          </div>
+                                        </a>
+                                      </li>
+                                       end task item 
+                                      <li> Task item 
+                                        <a href="#">
+                                          <h3>
+                                            Some task I need to do
+                                            <small class="pull-right">60%</small>
+                                          </h3>
+                                          <div class="progress xs">
+                                            <div class="progress-bar progress-bar-red" style="width: 60%" role="progressbar" aria-valuenow="20" aria-valuemin="0" aria-valuemax="100">
+                                              <span class="sr-only">60% Complete</span>
+                                            </div>
+                                          </div>
+                                        </a>
+                                      </li>
+                                       end task item 
+                                      <li> Task item 
+                                        <a href="#">
+                                          <h3>
+                                            Make beautiful transitions
+                                            <small class="pull-right">80%</small>
+                                          </h3>
+                                          <div class="progress xs">
+                                            <div class="progress-bar progress-bar-yellow" style="width: 80%" role="progressbar" aria-valuenow="20" aria-valuemin="0" aria-valuemax="100">
+                                              <span class="sr-only">80% Complete</span>
+                                            </div>
+                                          </div>
+                                        </a>
+                                      </li>
+                                       end task item 
+                                    </ul>
+                                  </li>
+                                  <li class="footer">
+                                    <a href="#">View all tasks</a>
+                                  </li>
+                                </ul>
+                              </li>-->
+
+                </ul>
+            </div>
+<?php } ?>
+
     </nav>
 </header>
 

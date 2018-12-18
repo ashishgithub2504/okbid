@@ -18,7 +18,7 @@
     </div>
     <div class="row">
         <div class="col-xs-12">
-            <div class="box">
+            <div class="box minh750">
                 <div class="box-header">
                     <h3 class="box-title"><i class="fa fa-fw fa-circle-o"></i> <span
                             class="caption-subject font-green bold uppercase">Conversations</span></h3>
@@ -26,16 +26,16 @@
                 </div>
                 <!-- /.box-header -->
 
-<!--                <div class="box-body">
+                <div class="box-body">
                     <div class="row">
                         <?php
                         echo $this->Form->create(false, ['type' => 'get', 'id' => 'filterForm', 'role' => 'form', 'inputDefaults' => ['div' => false, 'label' => false]]);
                         ?>
                         <div class="col-md-3">
-                            <label for="keyword">Keyword</label>
+                            <label for="keyword">Title</label>
 
                             <div class="input-group">
-                                <?php echo $this->Form->input('keyword', ['class' => 'form-control input-sm pull-right', 'placeholder' => 'Keyword', 'label' => false, 'value' => !empty($this->request->query['keyword']) ? $this->request->query['keyword'] : '']); ?>
+                                <?php echo $this->Form->input('title', ['class' => 'form-control input-sm pull-right','autocomplete'=>'off' ,'placeholder' => 'Title', 'label' => false, 'value' => !empty($this->request->query['title']) ? $this->request->query['title'] : '']); ?>
                                 <div class="input-group-btn">
                                     <?php echo $this->Form->button('<i class="fa fa-search"></i>', ['class' => 'btn btn-sm btn-default', 'type' => 'Submit', 'escape' => false]); ?>
                                 </div>
@@ -43,9 +43,9 @@
                         </div>
                         <?= $this->Form->end() ?>
                     </div>
-                </div>-->
+                </div>
 
-                <div class="box-body table-responsive no-padding">
+                <div class="box-body table-responsive no-padding" id="loadmessages">
                     <table class="table table-hover">
                         <thead>
                             <tr>
@@ -87,3 +87,19 @@
         </div>
     </div>
 </section>
+<script type="text/javascript">
+    $(function () {
+        <?php if($title == '0'){ ?>
+        setInterval(function () {
+
+            $.ajax({
+                url: baseurl + "admin/conversations/indexload",
+                cache: false,
+                success: function (html) {
+                    $("#loadmessages").html(html);
+                }
+            });
+        }, 5000);
+        <?php } ?>
+    });
+</script>

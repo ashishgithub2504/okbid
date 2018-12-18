@@ -32,7 +32,7 @@
                 </div>
                 <div class="col-md-6">
                     <div class="form-group">         
-                        <?php echo $this->Form->input('namehr', ['class' => 'form-control', 'placeholder' => ucfirst('namehr'), 'label' => ['text' => ucfirst('namehr'),'class'=>'req']]); ?>
+                        <?php echo $this->Form->input('namehe', ['class' => 'form-control', 'placeholder' => ucfirst('namehr'), 'label' => ['text' => ucfirst('namehr'),'class'=>'req']]); ?>
                     </div>
                 </div>
                 <div class="col-md-6">

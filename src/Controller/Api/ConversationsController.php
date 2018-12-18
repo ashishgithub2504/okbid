@@ -63,7 +63,7 @@ class ConversationsController extends AppController
             $entity->is_read = '0'; 
             $entity->status = '1'; 
             if($obj->save($entity)){
-                $this->Conversations->updateAll(['message'=>$this->request->data['chat']],['id'=>$this->request->data['id']]);
+                $this->Conversations->updateAll(['message'=>$this->request->data['chat'],'is_read'=>'0'],['id'=>$this->request->data['id']]);
                 $this->message = $this->msgDictonary['record_found_' . $this->language];
                 $this->responseData = $entity;
                 $this->status = true;
@@ -149,7 +149,7 @@ class ConversationsController extends AppController
             $this->request->data['chats']['0']['created'] = date('Y-m-d h:i:s');
             $this->request->data['chats']['0']['modified'] = date('Y-m-d h:i:s');
             
-            $this->request->data['is_read'] = '1';
+            $this->request->data['is_read'] = '0';
             $conversation = $this->Conversations->patchEntity($conversation, $this->request->data);
             
             if ($this->Conversations->save($conversation)) {

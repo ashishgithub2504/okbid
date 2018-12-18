@@ -2,7 +2,7 @@
 namespace App\Controller;
 
 use App\Controller\AppController;
-
+use Cake\ORM\TableRegistry;
 /**
  * Settings Controller
  *
@@ -105,5 +105,28 @@ class SettingsController extends AppController
         }
 
         return $this->redirect(['action' => 'index']);
+    }
+    
+    public function auctionwin(){
+        
+        $this->properties = TableRegistry::get('properties');
+        $result = $this->properties->find()
+                    ->where(['properties.status'=>'2'])
+                    ->contain(['PropertyBidsOne'=>function($q){
+                        return $q->select(['amount' => 'MAX(PropertyBidsOne.price)','PropertyBidsOne.property_id','PropertyBidsOne.user_id']);
+                    }])->toArray();
+        
+        
+        foreach ($result as $key=>$val){
+            
+            if(!empty($val['property_bids_one'])){
+                
+                $this->properties->updateAll(['status' => '3','buyer_id' => $val['property_bids_one']['user_id']
+                                ], ['id' => $val['id']]);
+                
+                
+            }
+        }
+        die;
     }
 }

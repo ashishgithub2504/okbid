@@ -138,7 +138,11 @@ class UsersController extends AppController
         $user = $this->Users->get($id, [
             'contain' => ['Roles']
         ]);
-
+		$countsign = TableRegistry::get('property_signatures')->find()->where(['user_id' => $id])->count();
+		$countview = TableRegistry::get('property_views')->find()->where(['user_id' => $id])->group(['property_id'])->count();
+		$countbid = TableRegistry::get('property_bids')->find()->where(['user_id' => $id])->count();
+		$countwon = TableRegistry::get('properties')->find()->where(['buyer_id' => $id,'status'=>'3'])->count();
+		$this->set(compact('countsign','countview','countbid','countwon'));
         $this->set('user', $user);
         $this->set('_serialize', ['user']);
     }
@@ -153,19 +157,32 @@ class UsersController extends AppController
             
         $user = $this->Users->newEntity();
         if ($this->request->is('post')) {
+           
+            if($this->request->data['role_id'] == '3'){
+                $redirect = 'leader';
+            }else if($this->request->data['role_id'] == '4'){
+                $redirect = 'agent';
+            }else if($this->request->data['role_id'] == '5'){
+                $redirect = 'contractor';
+            }else if($this->request->data['role_id'] == '6'){
+                $redirect = 'manager';
+            }else{
+                $redirect = 'index';
+            }
+            
             $user = $this->Users->patchEntity($user, $this->request->data);
             if ($this->Users->save($user)) {
                 $this->Flash->success(__('The user has been saved.'));
 
-                return $this->redirect(['action' => 'index']);
+                return $this->redirect(['action' => $redirect]);
             }
             $this->Flash->error(__('The user could not be saved. Please, try again.'));
         }
         $roles = $this->Users->Roles->find('list', ['limit' => 200])->where(['Roles.status' => '1','Roles.id !=' => $this->Auth->user('role_id')]);
         $manager = $this->Users->find('list', ['limit' => 200])->where(['Users.status' => '1','Users.role_id' => '5']);
-        
+        $prefix = TableRegistry::get('prefixs')->find('list',['keyField' => 'dialing','valueField' => 'dialing'])->toArray();
         //$campaigns = $this->Users->Campaigns->find('list', ['limit' => 200]);
-        $this->set(compact('user', 'roles','manager'));
+        $this->set(compact('user', 'roles','manager','prefix'));
         $this->set('_serialize', ['user','manager']);
     }
 
@@ -196,11 +213,12 @@ class UsersController extends AppController
             }
             $this->Flash->error(__('The user could not be saved. Please, try again.'));
         }
+        $prefix = TableRegistry::get('prefixs')->find('list',['keyField' => 'dialing','valueField' => 'dialing'])->toArray();
         $roles = $this->Users->Roles->find('list', ['limit' => 200])->where(['Roles.status' => '1','Roles.id !=' => $this->Auth->user('role_id')]);
         $manager = $this->Users->find('list', ['limit' => 200])->where(['Users.status' => '1','Users.role_id' => '5']);
         
         //$campaigns = $this->Users->Campaigns->find('list', ['limit' => 200]);
-        $this->set(compact('user', 'roles','manager'));
+        $this->set(compact('user', 'roles','manager','prefix'));
         $this->set('_serialize', ['user']);
     }
 
@@ -211,7 +229,7 @@ class UsersController extends AppController
      * @return \Cake\Network\Response|null Redirects to index.
      * @throws \Cake\Datasource\Exception\RecordNotFoundException When record not found.
      */
-    public function delete($id = null)
+    public function delete($id = null, $url = null)
     {
         $this->request->allowMethod(['post', 'delete']);
         $user = $this->Users->get($id);
@@ -220,8 +238,12 @@ class UsersController extends AppController
         } else {
             $this->Flash->error(__('The user could not be deleted. Please, try again.'));
         }
-
-        return $this->redirect(['action' => 'index']);
+        if(!empty($url)){
+            return $this->redirect(['action' => $url]);
+        }else{
+            return $this->redirect(['action' => 'index']);
+        }
+        
     }
     
     public function login() {
@@ -380,10 +402,9 @@ class UsersController extends AppController
         $user = $this->Users->get($this->Auth->user('id'));
         if (!empty($this->request->data)) {
             $user = $this->Users->patchEntity($user, [
-                'old_password' => $this->request->data['old_password'],
                 'password' => $this->request->data['new_password'],
                 'new_password' => $this->request->data['new_password'],
-                'confirm_password' => $this->request->data['confirm_password']], ['validate' => 'password']);
+                'confirm_password' => $this->request->data['confirm_password']]);
             if ($this->Users->save($user)) {
                 $this->Flash->success('The password is successfully changed');
                 return $this->redirect(['controller' => 'dashboard', 'action' => 'index']);
@@ -411,10 +432,13 @@ class UsersController extends AppController
             $entity->status = 1;
             if($obj->save($entity)){
                 $token = $this->Users->find()->select(['device_token','device_type'])->hydrate(false)->where(['id'=>$id,'status'=>'1','device_token !='=>''])->toArray();
-                pr($token); die;
+               
                 $message['title'] = 'Okbid notification';
                 $message['body'] = 'You have got new message';
-                $this->Default->pushnotification($message,$token);
+                $aps['id'] = $entity->id;
+                $aps['type'] = 'general';
+                
+                $this->Default->pushnotification($message,$token,$aps);
                 $this->Flash->success(__('Message has been sent successfully'));
                 return $this->redirect(['controller'=>'users','action'=>'message/'.$id]);
             }

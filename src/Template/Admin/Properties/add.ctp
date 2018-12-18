@@ -4,6 +4,8 @@
  * @var \App\View\AppView $this
  */
 use Cake\Core\Configure;
+$countries = $this->Custom->getCountry();
+
 ?>
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
 
@@ -51,7 +53,7 @@ use Cake\Core\Configure;
                         </div>
                         <div class="col-md-6">
                             <div class="form-group">         
-                                <?php echo $this->Form->input('price', ['class' => 'form-control', 'placeholder' => ucfirst('price'), 'label' => ['text' => ucfirst('price'), 'class' => 'req']]); ?>
+                                <?php echo $this->Form->input('price', ['class' => 'form-control',"min"=>"0", 'placeholder' => ucfirst('price'), 'label' => ['text' => ucfirst('price'), 'class' => 'req']]); ?>
                             </div>
                         </div>
 
@@ -68,12 +70,12 @@ use Cake\Core\Configure;
 
                             <div class="col-md-6">
                                 <div class="form-group">         
-                                    <?php echo $this->Form->input('country', ['class' => 'form-control', 'placeholder' => ucfirst('country'), 'label' => ['text' => ucfirst('country'), 'class' => 'req']]); ?>
+                                    <?php echo $this->Form->input('country', ['class' => 'form-control','empty' => 'select country', 'options'=>$countries, 'placeholder' => ucfirst('country'),'label' => ['text' => ucfirst('country') ,'class' => 'req']]); ?>
                                 </div>
                             </div>
                             <div class="col-md-6">
                                 <div class="form-group">         
-                                    <?php echo $this->Form->input('state', ['class' => 'form-control', 'placeholder' => ucfirst('state'), 'label' => ['text' => ucfirst('state'), 'class' => 'req']]); ?>
+                                    <?php echo $this->Form->input('state', ['class' => 'form-control', 'options' => '', 'label' => ['text' => ucfirst('state'), 'class' => 'req']]); ?>
                                 </div>
                             </div>
                             <div class="col-md-6">
@@ -135,7 +137,7 @@ use Cake\Core\Configure;
                             </div>
                             <div class="col-md-6">
                                 <div class="form-group">         
-                                    <?php echo $this->Form->input('area', ['class' => 'form-control', 'placeholder' => ucfirst('area'), 'label' => ['text' => ucfirst('area'), 'class' => 'req']]); ?>
+                                    <?php echo $this->Form->input('area', ['class' => 'form-control', 'placeholder' => ucfirst('build area'), 'label' => ['text' => ucfirst('area'), 'class' => 'req']]); ?>
                                 </div>
                             </div>
 
@@ -160,12 +162,12 @@ use Cake\Core\Configure;
                             </div>
                             <div class="col-md-6">
                                 <div class="form-group">         
-                                    <?php echo $this->Form->input('no_of_floor', ['class' => 'form-control', 'placeholder' => ucfirst('no of floor'), 'label' => ['text' => ucfirst('no Of Floor'), 'class' => 'req']]); ?>
+                                    <?php echo $this->Form->input('no_of_floor', ['class' => 'form-control',"min"=>"0" ,'placeholder' => ucfirst('no of floor'), 'label' => ['text' => ucfirst('no Of Floor'), 'class' => 'req']]); ?>
                                 </div>
                             </div>
                             <div class="col-md-6">
                                 <div class="form-group">         
-                                    <?php echo $this->Form->input('number_of_parking', ['class' => 'form-control', 'placeholder' => ucfirst('number of parking'), 'label' => ['text' => ucfirst('number Of Parking'), 'class' => 'req']]); ?>
+                                    <?php echo $this->Form->input('number_of_parking', ['class' => 'form-control',"min"=>"0", 'placeholder' => ucfirst('number of parking'), 'label' => ['text' => ucfirst('number Of Parking'), 'class' => 'req']]); ?>
                                 </div>
                             </div>
                             <div class="col-md-6">
@@ -231,9 +233,16 @@ use Cake\Core\Configure;
                             </div>
                             <div class="col-md-6">
                                 <div class="form-group">         
-                                    <?php echo $this->Form->input('3dtour', ['class' => 'form-control', 'placeholder' => ucfirst('3d tour'), 'label' => ['text' => ucfirst('3d tour'), 'class' => 'req']]); ?>
+                                    <?php echo $this->Form->input('want3dtour', ['class' => 'form-control12', 'id' => 'want3dtour', 'type' => 'checkbox', 'label' => ['text' => ucfirst('Want 3d tour'), 'class' => 'req']]); ?>
                                 </div>
                             </div>
+                            <div style="clear:both"></div>
+                            <div class="col-md-6">
+                                <div class="form-group">         
+                                    <?php echo $this->Form->input('3dtour', ['class' => 'form-control', 'disabled','placeholder' => ucfirst('3d tour'), 'label' => ['text' => ucfirst('3d tour'), 'class' => 'req']]); ?>
+                                </div>
+                            </div>
+                            
                         </div>
 
 
@@ -274,13 +283,24 @@ use Cake\Core\Configure;
                                     <?php echo $this->Form->input('evaculation_date', ['type' => 'text', 'class' => 'form-control', 'placeholder' => ucfirst('evaculation date'), 'label' => ['text' => ucfirst('evaculation Date'), 'class' => 'req']]); ?>
                                 </div>
                             </div>
-
+                            
+                            <div class="col-md-6">
+                                <div class="form-group top30">         
+                                    <?php echo $this->Form->input('is_flexible_evaculation', ['class' => 'form-control12','type' =>'checkbox', 'label' => ['text' => ucfirst('flexible evaculation'), 'class' => 'req']]); ?>
+                                </div>
+                            </div>
+                            <div style="clear:both"></div>
                             <div class="col-md-6">
                                 <div class="form-group">         
                                     <?php echo $this->Form->input('no_of_payment', ['class' => 'form-control', 'options' => ['1' => '1', '2' => '2', '3' => '3', '4' => '4'], 'empty' => 'select', 'placeholder' => ucfirst('no_of_payment'), 'label' => ['text' => ucfirst('no Of Payment'), 'class' => 'req']]); ?>
                                 </div>
                             </div>
-
+                            <div class="col-md-6">
+                                <div class="form-group">         
+                                    <?php echo $this->Form->input('is_flexible_payment', ['class' => 'form-control12','type' =>'checkbox', 'label' => ['text' => ucfirst('flexible payment'), 'class' => 'req']]); ?>
+                                </div>
+                            </div>
+                            <div style="clear:both"></div>
                             <div class="col-md-6">
                                 <div class="form-group">         
                                     <?php echo $this->Form->input('first_payment', ['class' => 'form-control', 'options' => Configure::read('FIRSTPAY' . LAN), 'empty' => 'select', 'placeholder' => ucfirst('first_payment'), 'label' => ['text' => ucfirst('first Payment'), 'class' => 'req']]); ?>
@@ -392,6 +412,25 @@ use Cake\Core\Configure;
             }
             $("#sub-category").html(html);
         });
+        
+        $(document).on('change','#country',function(){            
+            $.ajax({
+                url: baseurl + "admin/properties/getstate",
+                type:'POST',
+                data:{'id':$(this).val()},
+                cache: false,
+                success: function (html) {
+                    var ht = '';
+                    var data = JSON.parse(html);
+                    console.log(data);
+                    for(i=0 ; i<data.length; i++){
+                        ht += '<option value="'+data[i]['id']+'">'+data[i]['name']+'</option>';
+                    }
+                    console.log(ht);
+                    $("#state").html(ht);
+                }
+            });
+        });
 
         $("#defect").click(function () {
             if ($(this).is(':checked') == true) {
@@ -399,7 +438,14 @@ use Cake\Core\Configure;
             } else {
                 $("#defects-text").attr('disabled', false);
             }
-
+        });
+        
+        $("#want3dtour").click(function () {
+            if ($(this).is(':checked') == true) {
+                $("#3dtour").attr('disabled', false);
+            } else {
+                $("#3dtour").attr('disabled', true);
+            }
         });
 
         $("#evaculation-date").datepicker({});
@@ -411,15 +457,16 @@ use Cake\Core\Configure;
     }
 </style>
 
-<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyA7VsgVOAbB2BxoZI_xQ4iF97YbIL3_1yw&libraries=places&libraries=places" async defer></script> 
+<script src="http://maps.googleapis.com/maps/api/js?key=AIzaSyA7VsgVOAbB2BxoZI_xQ4iF97YbIL3_1yw&libraries=places&libraries=places" async defer></script> 
 <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
 
 <?php
 echo $this->Html->script(['jquery.geocomplete.js']);
 ?>
 <script>
-    $(function () {
-        $("#geocomplete").geocomplete({
+    var jq = $.noConflict();
+    jq(function () {
+        jq("#geocomplete").geocomplete({
             map: ".map_canvas",
             details: "form ",
             markerOptions: {
@@ -427,21 +474,21 @@ echo $this->Html->script(['jquery.geocomplete.js']);
             }
         });
 
-        $("#geocomplete").bind("geocode:dragged", function (event, latLng) {
-            $("input[name=lat]").val(latLng.lat());
-            $("input[name=lng]").val(latLng.lng());
-            $("#reset").show();
+        jq("#geocomplete").bind("geocode:dragged", function (event, latLng) {
+            jq("input[name=lat]").val(latLng.lat());
+            jq("input[name=lng]").val(latLng.lng());
+            jq("#reset").show();
         });
 
 
-        $("#reset").click(function () {
-            $("#geocomplete").geocomplete("resetMarker");
-            $("#reset").hide();
+        jq("#reset").click(function () {
+            jq("#geocomplete").geocomplete("resetMarker");
+            jq("#reset").hide();
             return false;
         });
 
-        $("#find").click(function () {
-            $("#geocomplete").trigger("geocode");
+        jq("#find").click(function () {
+            jq("#geocomplete").trigger("geocode");
         }).click();
     });
 </script>

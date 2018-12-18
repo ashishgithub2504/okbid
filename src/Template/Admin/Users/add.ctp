@@ -80,7 +80,7 @@ use Cake\Core\Configure;
                 
                 <div class="col-md-2">
                     <div class="form-group">         
-                        <?php echo $this->Form->input('prefix', ['class' => 'form-control', 'options' => Configure::read('PREFIX'), 'label' => ['text' => ucfirst('prefix')] ]); ?>
+                        <?php echo $this->Form->input('prefix', ['class' => 'form-control', 'options' => $prefix, 'label' => ['text' => ucfirst('prefix')] ]); ?>
                     </div>
                 </div>
                 <div class="col-md-4">
@@ -88,6 +88,13 @@ use Cake\Core\Configure;
                         <?php echo $this->Form->input('phone', ['class' => 'form-control', 'placeholder' => ucfirst('phone'), 'label' => ['text' => ucfirst('phone'),'class'=>'req']]); ?>
                     </div>
                 </div>
+                
+                <div class="col-md-6">
+                    <div class="form-group">         
+                        <?php echo $this->Form->input('gender', ['class' => 'form-control', 'options' => ['0'=>'Female', '1'=>'Male'], 'label' => ['text' => ucfirst('Gender')] ]); ?>
+                    </div>
+                </div>
+
                 <div class="col-md-6">
                     <div class="form-group">         
                         <?php echo $this->Form->input('address', ['class' => 'form-control', 'placeholder' => ucfirst('address'), 'label' => ['text' => ucfirst('address'),'class'=>'req']]); ?>

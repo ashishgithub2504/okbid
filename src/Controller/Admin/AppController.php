@@ -83,22 +83,43 @@ class AppController extends Controller
         $userData = ($this->Auth->user()) ? ($this->Auth->user()) : [];
         $this->set(compact("userData"));
         $property = TableRegistry::get('Properties');
-        $pendingproty = $property->find('list', [
-                
-            'keyField' => 'id',
-            'valueField' => ['country','state','city','no_of_room']
-          ])->where(['status'=>0])->toArray();
+        
+//        $pendingproty = $property->find('list', [
+//            'keyField' => 'id',
+//            'valueField' => ['country','state','city','no_of_room','propertytype_id']
+//          ])->where(['status'=>0])->toArray();
+        
+        $pendingproty = $property->find('all')
+                        ->select(['id','city','propertytype_id','no_of_room'])
+                        ->hydrate(false)
+                        ->where(['status'=>0,'is_read'=>'0','is_complete'=>'1'])
+                        ->count();
+        
         
         $assignproty = $property->find('list', [
             'keyField' => 'id',
             'valueField' => ['city','no_of_room']
-          ])->where(['assign'=>$this->Auth->user('id')])->toArray();
+        ])->where(['assign != '=>'0','is_complete'=>'1'])->count();
         
-       
+        $msgnotification = TableRegistry::get('Conversations')->find()
+                ->contain(['Users' => function($q){
+                    return $q->select(['name','profile_pic']);
+                }])->where(['is_read' => '0'])
+        ->hydrate(false)        
+        ->toArray();
+        
+        $messages['0']['message'] = $pendingproty.' New property';
+        $messages['0']['controller'] = 'properties';
+        $messages['0']['action'] = 'index';
+        $messages['1']['message'] = $assignproty.' Assign properties';
+        $messages['1']['controller'] = 'properties';
+        $messages['1']['action'] = 'index';
+        
+        
         $this->loadModel('Settings');
         $SettingConfig = $this->Settings->getAllSettings();
         $this->SettingConfig = $SettingConfig;
-        $this->set(compact("SettingConfig","pendingproty","assignproty"));
+        $this->set(compact("SettingConfig","pendingproty","assignproty","messages","msgnotification"));
         
     }
 

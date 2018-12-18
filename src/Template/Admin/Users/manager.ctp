@@ -1,4 +1,5 @@
 <?php
+use Cake\Core\Configure;
 /**
   * @var \App\View\AppView $this
   */
@@ -46,6 +47,7 @@
                                             'templates' => [
                                                 'inputContainer' => '<div class="col-md-4 input {{type}}{{required}}">{{content}}</div>',
                                             ],
+                                            'autocomplete' => 'off',
                                             'placeholder' => 'Manager name', 
                                             'label' => false, 
                                             'value' => !empty($this->request->query['keyword']) ? $this->request->query['keyword'] : ''
@@ -56,6 +58,7 @@
                                     'templates' => [
                                         'inputContainer' => '<div class="col-md-4 input {{type}}{{required}}">{{content}}</div>',
                                     ],
+                                    'autocomplete' => 'off',
                                     'placeholder' => 'City Name',
                                     'label' => false,
                                     'value' => !empty($this->request->query['city']) ? $this->request->query['city'] : ''
@@ -81,7 +84,10 @@
                         <?= $this->Form->end() ?>
                     </div>
                 </div>
-                <div class="box-body table-responsive no-padding">
+            </div>
+            
+            <div class="box">
+                <div class="box-body table-responsive no-padding tablescroll">
                     <table class="table table-hover">
                         <thead>
                             <tr>
@@ -105,7 +111,7 @@
                                 <?= $this->Html->link($user->name, ['controller' => 'Users', 'action' => 'view', $user->id]);?>
                                 </td>
                                 <td><?= h($user->email) ?></td>
-                                <td><?= $this->Number->format($user->phone) ?></td>
+                                <td><?= !empty($user->prefix)?$user->prefix:''; echo ' '. $user->phone ?></td>
                                 
                                 <td><?php 
                                     $datetime1 = new DateTime($user->created);
@@ -119,7 +125,7 @@
                                     <?= $this->Html->link(__('<i class="fa fa-fw fa-eye"></i> Property'), ['controller'=>'properties','action' => 'user-pro', $user->id], ['class' => 'btn btn-warning  btn-sm', 'escape' => false]) ?>
                                     <?php echo $this->Html->link(__('<i class="fa fa-fw fa-eye"></i> View'), ['action' => 'view', $user->id], ['class' => 'btn btn-primary btn-sm', 'escape' => false]) ?>
                                     <?= $this->Html->link(__('<i class="fa fa-comments-o"></i> Send message'), ['action' => 'message', $user->id], ['class' => 'btn btn-sm btn-info','title'=>'Send message' ,'escape' => false]) ?>
-                                    <?= $this->Form->postLink('<i class="fa fa-trash"></i> Delete', ['action' => 'delete', $user->id], ['confirm' => __('Are you sure you want to delete # {0}?', $user->id), 'class' => 'btn btn-danger btn-sm', 'escape' => false]) ?>
+                                    <?= $this->Form->postLink('<i class="fa fa-trash"></i> Delete', ['action' => 'delete', $user->id,'manager'], ['confirm' => __('Are you sure you want to delete # {0}?', $user->id), 'class' => 'btn btn-danger btn-sm', 'escape' => false]) ?>
                                 </td>
                             </tr>
                             <?php endforeach;

@@ -4,8 +4,17 @@
  * @var \App\View\AppView $this
  */
 use Cake\Core\Configure;
+
 ?>
-<section class="content-header">
+<?php if (in_array($this->request->session()->read('Auth.admin.role_id'), array('1', '5'))) { 
+    $fixedfilter = 'fixedfilter';
+    $top180 = 'top180';
+}else{
+    $fixedfilter = '';
+    $top180 = '';
+}
+?>
+<section class="content-header topheader">
     <h1>
         Manage Properties
         <small>All Properties List</small>
@@ -20,10 +29,10 @@ use Cake\Core\Configure;
     </div>
     <div class="row">
         <div class="col-xs-12">
-            <div class="box">
+            <div class="box <?= $fixedfilter; ?>">
                 <div class="box-header">
                     <h3 class="box-title"><i class="fa fa-fw fa-circle-o"></i> 
-                        <span class="caption-subject font-green bold uppercase">Total Pending Properties : <?= count($properties); ?></span>
+                        <span class="caption-subject font-green bold uppercase">Total Pending Properties : <?= $this->request->param('paging')['Properties']['count']; ?></span>
                     </h3>
                     <div class="box-tools">
                         <?php echo $this->Html->link("<i class=\"fa fa-plus\"></i> " . __('Add Property'), ["action" => "add"], ["class" => "btn btn-block btn-primary", "escape" => false]); ?>
@@ -36,17 +45,20 @@ use Cake\Core\Configure;
                         <?php
                         echo $this->Form->create(false, ['type' => 'get', 'id' => 'filterForm', 'role' => 'form', 'inputDefaults' => ['div' => false, 'label' => false]]);
                         ?>
-                        <div class="col-md-12">
+                        <div class="col-md-12 col-sm-12">
 
                             <div class="input-group">
+                                
+                                
                                 <?php
                                 echo $this->Form->input('handling', [
                                     'class' => 'form-control input-sm pull-right',
                                     'templates' => [
-                                        'inputContainer' => '<div class="col-md-4 input {{type}}{{required}}">{{content}}</div>',
+                                        'inputContainer' => '<div class="floatleft top5 col-md-4 input {{type}}{{required}}">{{content}}</div>',
                                     ],
                                     'label' => false,
                                     'options' => Configure::read('HANDING' . LAN),
+                                    'autocomplete'=>"off",
                                     'empty' => 'Select Handling Status',
                                     'value' => !empty($this->request->query['handling']) ? $this->request->query['handling'] : ''
                                 ]);
@@ -54,8 +66,9 @@ use Cake\Core\Configure;
                                 echo $this->Form->input('fromdate', [
                                         'class' => 'form-control input-sm pull-right',
                                         'templates' => [
-                                            'inputContainer' => '<div class=" col-md-4 input {{type}}{{required}}">{{content}}</div>',
+                                            'inputContainer' => '<div class="floatleft top5 col-md-4 input {{type}}{{required}}">{{content}}</div>',
                                         ],
+                                        'autocomplete'=>"off",
                                         'placeholder' => 'From last update',
                                         'label' => false,
                                         'value' => !empty($this->request->query['fromdate']) ? $this->request->query['fromdate'] : ''
@@ -64,8 +77,9 @@ use Cake\Core\Configure;
                                     echo $this->Form->input('todate', [
                                         'class' => 'form-control input-sm pull-right',
                                         'templates' => [
-                                            'inputContainer' => '<div class=" col-md-4 input {{type}}{{required}}">{{content}}</div>',
+                                            'inputContainer' => '<div class="floatleft top5 col-md-4 input {{type}}{{required}}">{{content}}</div>',
                                         ],
+                                        'autocomplete'=>"off",
                                         'placeholder' => 'Until Last Update',
                                         'label' => false,
                                         'value' => !empty($this->request->query['todate']) ? $this->request->query['todate'] : ''
@@ -76,8 +90,9 @@ use Cake\Core\Configure;
                                 echo $this->Form->input('keyword', [
                                     'class' => 'form-control input-sm pull-right',
                                     'templates' => [
-                                        'inputContainer' => '<div class="top5 col-md-4 input {{type}}{{required}}">{{content}}</div>',
+                                        'inputContainer' => '<div class="top5 floatleft col-md-4 input {{type}}{{required}}">{{content}}</div>',
                                     ],
+                                    'autocomplete'=>"off",
                                     'placeholder' => 'User Name',
                                     'label' => false,
                                     'value' => !empty($this->request->query['keyword']) ? $this->request->query['keyword'] : ''
@@ -87,8 +102,9 @@ use Cake\Core\Configure;
                                 echo $this->Form->input('city', [
                                     'class' => 'form-control input-sm pull-right',
                                     'templates' => [
-                                        'inputContainer' => '<div class="top5 col-md-4 input {{type}}{{required}}">{{content}}</div>',
+                                        'inputContainer' => '<div class="top5 floatleft col-md-4 input {{type}}{{required}}">{{content}}</div>',
                                     ],
+                                    'autocomplete'=>"off",
                                     'placeholder' => 'City Name',
                                     'label' => false,
                                     'value' => !empty($this->request->query['city']) ? $this->request->query['city'] : ''
@@ -101,8 +117,9 @@ use Cake\Core\Configure;
                                     echo $this->Form->input('role', [
                                         'class' => 'form-control input-sm pull-right',
                                         'templates' => [
-                                            'inputContainer' => '<div class="top5 col-md-4 input {{type}}{{required}}">{{content}}</div>',
+                                            'inputContainer' => '<div class="top5 floatleft col-md-4 input {{type}}{{required}}">{{content}}</div>',
                                         ],
+                                        'autocomplete' => 'off',
                                         'label' => false,
                                         'options' => $list,
                                         'empty' => 'Select User',
@@ -114,7 +131,7 @@ use Cake\Core\Configure;
                                 ?>
 
                                 <div class="input-group-btn col-md-3 ">
-                                    <?php echo $this->Form->button('<i class="fa fa-search"></i> Search', ['class' => 'btn btn-sm btn-default top5', 'type' => 'Submit', 'escape' => false]); ?>
+                                    <?php echo $this->Form->button('<span class="glyphicon glyphicon-search"></span> Search', ['class' => 'btn btn-sm btn-primary floatleft top5', 'type' => 'Submit', 'escape' => false]); ?>
                                 </div>
                             </div>
                         </div>
@@ -125,7 +142,7 @@ use Cake\Core\Configure;
                  
             </div>
             
-            <div class="box">
+            <div class="box <?= $top180; ?>">
                 
                 <div class="box-body table-responsive no-padding tablescroll">
                     <table class="table table-hover">
@@ -133,18 +150,18 @@ use Cake\Core\Configure;
                             <tr>
                                 <th scope="col"><?= $this->Paginator->sort('id') ?></th>
                                  <?php if (in_array($this->request->session()->read('Auth.admin.role_id'), array('1', '5'))) { ?>
-                                    <th scope="col"><?= $this->Paginator->sort('user') ?></th>
+                                    <th scope="col"><?= $this->Paginator->sort('user.name') ?></th>
                                 <?php } ?>
                                 <th scope="col"><?= $this->Paginator->sort('name') ?></th> 
-								<th scope="col"><?= $this->Paginator->sort('city') ?></th>
-								<th scope="col"><?= $this->Paginator->sort('room') ?></th>								
+                                <th scope="col"><?= $this->Paginator->sort('city') ?></th>
+                                <th scope="col"><?= $this->Paginator->sort('room') ?></th>								
                                 <th scope="col"><?= $this->Paginator->sort('price') ?></th>
                                 <th scope="col"><?= $this->Paginator->sort('Handling Status') ?></th>
                                 <th scope="col"><?= $this->Paginator->sort('Handling Status Update Date') ?></th>
                                 <th scope="col" class="actions"><?= __('') ?></th>
                             </tr>
                         </thead>
-                        <tbody>
+                        <tbody  id="loadcontent">
                             <?php
                             if (count($properties) > 0):
                                 foreach ($properties as $key => $property):
@@ -163,20 +180,24 @@ use Cake\Core\Configure;
                                     }
                                     ?>
                                     <tr>
-                                        <td><?= $this->Number->format($key + 1) ?></td>
+                                        <td><?= $this->Number->format( $paginate + ($key+1)) ?></td>
                                         <?php if (in_array($this->request->session()->read('Auth.admin.role_id'), array('1', '5'))) { ?>
                                             <td><?= $this->Html->link($property->user->name,['controller'=>'users','action'=>'view',$property->user->id]) . ' ' . ($role) ?></td>
                                         <?php } ?>
                                         <td>
                                             <?php
-                                            echo $property->city.',';
+                                            
                                             if ($property->propertytype_id != 0) {
-                                                echo Configure::read('PROTY' . LAN)[$property->propertytype_id];
+                                                echo $this->Custom->getPropertyType($property->propertytype_id);
                                             }
-                                            echo ' ,' . $property->no_of_room . ' Rooms';
-                                            ?></td>
-										<td><?php echo $property->city; ?></td>
-										<td><?php echo $property->no_of_room; ?></td>
+                                            echo ', ' . $property->no_of_room . ' '.Configure::read('ROOM')['en'].' ';
+                                            echo ',  ';
+                                            ?>
+					<?php echo is_numeric($property->city)?$this->Custom->getCityName($property->city):$property->city; ?>
+                                        </td>
+                                        
+                                        <td><?php echo is_numeric($property->city)?$this->Custom->getCityName($property->city):$property->city; ?></td>
+                                        <td><?php echo $property->no_of_room; ?></td>
                                         <td><?= h($property->price) ?></td>
                                         <td><?= isset($property->handling)? Configure::read('HANDING' . LAN)[$property->handling]:'Pending'; ?></td>
                                         <td><?= $property->created->format('d/m/Y'); ?></td>
@@ -184,9 +205,11 @@ use Cake\Core\Configure;
                                             <?= $this->Html->link(__('<i class="fa fa-fw fa-eye"></i> View'), ['action' => 'view', $property->id], ['class' => 'btn btn-primary btn-sm', 'escape' => false]) ?>
                                            
                                             <?= $this->Html->link(__('<i class="fa fa-fw fa-eye"></i> Graph'), ['action' => 'graph', $property->id], ['class' => 'btn btn-warning btn-sm', 'escape' => false]) ?>
-                                             <?php if (in_array($this->request->session()->read('Auth.admin.role_id'), array('1', '5'))) { ?>
+                                            <?php if (in_array($this->request->session()->read('Auth.admin.role_id'), array('1', '5'))) { ?>
                                                 <?= $this->Html->link(__('<i class="fa fa-fw fa-eye"></i> Assign'), ['action' => 'assign', $property->id], ['data-toggle' => "modal", 'data-target' => "#myModal", 'class' => 'btn  btn-info btn-sm', 'escape' => false]) ?>
+                                            <?php if (in_array($this->request->session()->read('Auth.admin.role_id'), array('1'))) { ?>
                                                 <?= $this->Form->postLink('<i class="fa fa-trash"></i> Delete', ['action' => 'delete', $property->id], ['confirm' => __('Are you sure you want to delete # {0}?', $property->id), 'class' => 'btn btn-danger btn-sm', 'escape' => false]) ?>
+                                                <?php } ?>
                                             <?php } ?>
                                             
                                         </td>
@@ -217,6 +240,7 @@ use Cake\Core\Configure;
     $(function () {
 
         $("#fromdate").datepicker({
+            autoclose: true,
             onClose: function () {
                 $("#todate").datepicker(
                         "change",
@@ -226,6 +250,7 @@ use Cake\Core\Configure;
         });
         
         $("#todate").datepicker({
+            autoclose: true,
             onClose: function () {
                 $("#fromdate").datepicker(
                         "change",
@@ -233,7 +258,22 @@ use Cake\Core\Configure;
                 );
             }
         });
-
+        
+        <?php if($page == '0' && $filter == '0' && $sort == '0'){ ?>
+                
+        setInterval(function() {
+            
+            $.ajax({
+                url: baseurl+"admin/properties/pending",
+                cache: false,
+                success: function(html){
+                  
+                  $("#loadcontent").html(html);
+                }
+              });
+        }, 5000);
+        <?php } ?>
+            
 //        $("#fromdate").datepicker();
 //        $('#todate').datepicker({dateFormat: 'yy:mm:dd'});
 //

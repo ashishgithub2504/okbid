@@ -62,17 +62,17 @@ use Cake\Core\Configure;
                                         ]); ?>
                                 
                                 <?php if (in_array($this->request->session()->read('Auth.admin.role_id'), array('1','5'))) { 
-                                    echo $this->Form->input('role', 
-                                        [
-                                            'class' => 'form-control input-sm pull-right',
-                                            'templates' => [
-                                                'inputContainer' => '<div class="col-md-3 input {{type}}{{required}}">{{content}}</div>',
-                                            ],
-                                            'label'=>false,
-                                            'options' => $list,
-                                            'empty'=>'Select User',
-                                            'value' => !empty($this->request->query['role']) ? $this->request->query['role'] : ''
-                                        ]); 
+//                                    echo $this->Form->input('role', 
+//                                        [
+//                                            'class' => 'form-control input-sm pull-right',
+//                                            'templates' => [
+//                                                'inputContainer' => '<div class="col-md-3 input {{type}}{{required}}">{{content}}</div>',
+//                                            ],
+//                                            'label'=>false,
+//                                            'options' => $list,
+//                                            'empty'=>'Select User',
+//                                            'value' => !empty($this->request->query['role']) ? $this->request->query['role'] : ''
+//                                        ]); 
                                     } ?>
                                 
                                 <div class="input-group-btn col-md-3 ">
@@ -128,8 +128,8 @@ use Cake\Core\Configure;
                                     echo ' '.$property->no_of_room.' Rooms';
                                     ?></td>
                                 <td><?= h($property->price) ?></td>
-                                <td><?= h(25) ?></td>
-                                <td><?= h(50) ?></td>
+                                <td><?= h($property->property_view_count) ?></td>
+                                <td><?= h($property->property_signature_count) ?></td>
                                 <td><?= $property->created->format('d/m/Y'); ?></td>
                                 <td><?= $property->modified->format('d/m/Y'); ?></td>
                                 <td><?= Configure::read('PSTATUS'.LAN)[$property->status]; ?></td>

@@ -72,4 +72,13 @@ class CategoriesTable extends Table
 
         return $validator;
     }
+    
+    public function findCommon(Query $query, array $options) {
+        $searchKeyword = $options['searchKeyword'];
+        if (!empty($searchKeyword['keyword']) && trim($searchKeyword['keyword'])) {
+              $query->where(['OR'=>['Countries.name LIKE' => '%' .  trim($searchKeyword['keyword']) . '%' , 'Countries.namehe LIKE' => '%' .  trim($searchKeyword['keyword']) . '%' ]]);
+        }
+        
+        return $query;
+    }
 }

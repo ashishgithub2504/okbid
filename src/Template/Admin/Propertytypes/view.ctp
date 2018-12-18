@@ -21,19 +21,16 @@
                         </tr>
                         <tr>
                             <th scope="row"><?= __('Namehr') ?></th>
-                            <td><?= h($propertytype->namehr) ?></td>
+                            <td><?= h($propertytype->namehe) ?></td>
                         </tr>
                         <tr>
                             <th scope="row"><?= __('Category') ?></th>
                             <td><?= $propertytype->has('category') ? $this->Html->link($propertytype->category->name, ['controller' => 'Categories', 'action' => 'view', $propertytype->category->id]) : '' ?></td>
                         </tr>
-                        <tr>
-                            <th scope="row"><?= __('Id') ?></th>
-                            <td><?= $this->Number->format($propertytype->id) ?></td>
-                        </tr>
+                        
                         <tr>
                             <th scope="row"><?= __('Status') ?></th>
-                            <td><?= $this->Number->format($propertytype->status) ?></td>
+                            <td><?= ($propertytype->status == '1')?'Active':'InActive'; ?></td>
                         </tr>
                         <tr>
                             <th scope="row"><?= __('Created') ?></th>

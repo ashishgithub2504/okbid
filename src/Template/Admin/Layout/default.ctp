@@ -88,12 +88,11 @@ $this->Html->scriptEnd();
                     <a href="#"><?php echo $SettingConfig['sitename']; ?></a>.</strong> All rights reserved.
             </footer>
         </div>
+        <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/jquery/2.2.0/jquery.js" />
         <?php
-       
-echo $this->Html->script([  'jquery.validate.min.js', 'additional-methods.js']);
+        echo $this->Html->script([  'jquery.validate.min.js', 'additional-methods.js']);
         echo $this->Html->script([
             'custom.js',
-            '/assets/plugins/jQuery/jQuery-2.1.4.min.js',
             '/assets/bootstrap/js/bootstrap.min.js',
             '/assets/plugins/morris/morris.min',
             '/assets/plugins/sparkline/jquery.sparkline.min',

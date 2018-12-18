@@ -3,15 +3,22 @@
  * @var \App\View\AppView $this
  */
 use Cake\Core\Configure;
+
 ?>
-<section class="content-header sticky">
-    <h1>
-        Manage Users
-        <small>Users info</small>
-    </h1>
-    <?= $this->Html->link(__('<i class="fa fa-edit"></i> Edit'), ['action' => 'edit', $user->id], ['class' => 'btn btn-success btn-sm', 'style' => 'float:right;', 'escape' => false]) ?>
-</section>
+
 <section class="content">
+    <div class="row">
+        <section class="content-header">
+            <h1>
+                Manage Users
+                <small>Users info</small>
+            
+                <p style="float: right;">
+                    <?= $this->Html->link(__('<i class="fa fa-edit"></i> Edit'), ['action' => 'edit', $user->id], ['class' => 'btn btn-success btn-sm', 'style' => 'float:right;', 'escape' => false]) ?>
+                </p>
+            </h1>            
+        </section>
+    </div>
     <div class="row">
         <div class="col-xs-12">
             <div class="box">
@@ -22,10 +29,13 @@ use Cake\Core\Configure;
                             <th scope="row"><?= __('Full Name') ?></th>
                             <td><?= h($user->name) ?></td>
                         </tr>
+                        <?php if(in_array($user->role->id, ['3','4'])){ ?>
                         <tr>
                             <th scope="row"><?= __('License Number') ?></th>
                             <td><?= h($user->license); ?></td>
                         </tr>
+                        <?php } ?>
+                        
                         <?php if (!empty($user->company)) { ?>
                             <tr>
                                 <th scope="row"><?= __('Company Name') ?></th>
@@ -38,12 +48,12 @@ use Cake\Core\Configure;
                         </tr>
                         <tr>
                             <th scope="row"><?= __('Phone') ?></th>
-                            <td><?= !empty($user->prefix)?$user->prefix:'' . ' '.$user->phone; ?></td>
+                            <td><?= !empty($user->prefix)?$user->prefix:''; echo ' '.$user->phone; ?></td>
                         </tr>
                         
                         <tr>
                             <th scope="row"><?= __('User') ?></th>
-                            <td><?= $user->has('role') ? $this->Html->link($user->role->name, ['controller' => 'Roles', 'action' => 'view', $user->role->id]) : '' ?></td>
+                            <td><?= $user->has('role') ? $user->role->name:''; ?></td>
                         </tr>
                           <?php if($user->role_id != 2){ ?>
                         
@@ -165,19 +175,19 @@ use Cake\Core\Configure;
                             
                         <tr>
                             <th scope="row"><?= __('amount of properties confirmed') ?></th>
-                            <td><?= '250'; ?>  <?= $this->Html->link('View',[$user->id]); ?></td>
+                            <td><?= '250'; ?>  <?= $this->Html->link('<i class="fa fa-eye" aria-hidden="true"></i>',[$user->id],['escape' => false,'title'=>'View']); ?></td>
                         </tr>   
                         
                         <?php if (in_array($user->role->id, array('3'))) { ?>
 
                             <tr>
                                 <th scope="row"><?= __('Amount of property that have been assigned to him at the last month') ?></th>
-                                <td><?= '20'; ?>  <?= $this->Html->link('View',[$user->id]); ?></td>
+                                <td><?= '20'; ?>   <?= $this->Html->link('<i class="fa fa-eye" aria-hidden="true"></i>',[$user->id],['escape' => false,'title'=>'View']); ?></td>
                             </tr>
 
                             <tr>
                                 <th scope="row"><?= __('Quantity of property assigned') ?></th>
-                                <td><?= '50';?>  <?= $this->Html->link('View',[$user->id]); ?></td>
+                                <td><?= '50';?>  <?= $this->Html->link('<i class="fa fa-eye" aria-hidden="true"></i>',[$user->id],['escape' => false,'title'=>'View']); ?></td>
                             </tr>
                             
                             
@@ -186,23 +196,23 @@ use Cake\Core\Configure;
                         <?php if (in_array($user->role->id, array('3', '4','6'))) { ?>
                             <tr>
                                 <th scope="row"><?= __('Active properties') ?></th>
-                                <td><?= '25'; ?>  <?= $this->Html->link('View',[$user->id]); ?></td>
+                                <td><?= '25'; ?>  <?= $this->Html->link('<i class="fa fa-eye" aria-hidden="true"></i>',[$user->id],['escape' => false,'title'=>'View']); ?></td>
                             </tr>
                             <tr>
                                 <th scope="row"><?= __('Inactive  properties') ?></th>
-                                <td><?= '10'; ?>  <?= $this->Html->link('View',[$user->id]); ?></td>
+                                <td><?= '10'; ?>   <?= $this->Html->link('<i class="fa fa-eye" aria-hidden="true"></i>',[$user->id],['escape' => false,'title'=>'View']); ?></td>
                             </tr>
                             <tr>
                                 <th scope="row"><?= __('Amount of property published by himself') ?></th>
-                                <td><?= '50'; ?> <?= $this->Html->link('View',[$user->id]); ?></td>
+                                <td><?= '50'; ?>  <?= $this->Html->link('<i class="fa fa-eye" aria-hidden="true"></i>',[$user->id],['escape' => false,'title'=>'View']); ?></td>
                             </tr>
                             <tr>
                                 <th scope="row"><?= __('Number of active properties in the app') ?></th>
-                                <td><?= '50'; ?> <?= $this->Html->link('View',[$user->id]); ?></td>
+                                <td><?= '50'; ?>  <?= $this->Html->link('<i class="fa fa-eye" aria-hidden="true"></i>',[$user->id],['escape' => false,'title'=>'View']); ?></td>
                             </tr>
                             <tr>
                                 <th scope="row"><?= __('Quantity of inactive properties') ?></th>
-                                <td><?= '50'; ?> <?= $this->Html->link('View',[$user->id]); ?></td>
+                                <td><?= '50'; ?>  <?= $this->Html->link('<i class="fa fa-eye" aria-hidden="true"></i>',[$user->id],['escape' => false,'title'=>'View']); ?></td>
                             </tr>
                             <tr>
                                 <th scope="row"><?= __('Amount of property that he published by himself in the last month') ?></th>
@@ -231,10 +241,10 @@ use Cake\Core\Configure;
                             <td>
                                 <div class="divider1">
                                     <h3>Buyer</h3>
-                                    <p>how many properties view up to date : 25</p>
-                                    <p>how many properties signed: 15</p>
-                                    <p>how many properties bid : 10</p>
-                                    <p>how many auctions he won : 5</p>
+                                    <p>how many properties view up to date : <?= $countview; ?></p>
+                                    <p>how many properties signed: <?= $countsign; ?></p>
+                                    <p>how many properties bid : <?= $countbid; ?></p>
+                                    <p>how many auctions he won : <?= $countwon; ?></p>
                                     <p>how many percent purchased above the minimum price of sellers : 40%</p>
                                 <div>
                                     <?= $this->Html->link(__('<i class="fa fa-eye"></i> Buyer Personal Area'), ['controller'=>'properties','action' => 'buyer', $user->id], ['class' => 'btn btn-success btn-sm', 'style' => 'float:right;', 'escape' => false]) ?>

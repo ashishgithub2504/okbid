@@ -81,7 +81,8 @@ class AppController extends Controller {
         $this->loadModel('Categories');
         $this->loadModel('News');
         $this->loadModel('Testimonials');
-
+        
+        $this->Auth->allow(['auctionwin']);
         //$sliders = $this->Images->find()->where(['status' => 1, 'type' => 2])->select(['id', 'title', 'image'])->order(['created DESC'])->toArray();
         $categories = $this->Categories->find()->where(['status' => 1])->select(['id', 'name'])->toArray();
         $recent_news = $this->News->find()->where(['status' => 1])->select(['id', 'title', 'short_desc', 'image', 'created'])->order(['created DESC'])->limit(8)->toArray();
@@ -106,5 +107,7 @@ class AppController extends Controller {
             $this->set('_serialize', true);
         }
     }
+    
+    
 
 }

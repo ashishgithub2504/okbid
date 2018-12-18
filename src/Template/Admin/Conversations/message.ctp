@@ -12,11 +12,11 @@
         /*    margin: 10px 0;*/
     }
     .darker p{
-        float: right;
+        float: right !important;
     }
     .darker {
         border-color: #ccc;
-        background-color: #ddd;
+        background-color: #E4CA8F;
     }
 
     .containernew::after {
@@ -71,30 +71,37 @@
         <div class="col-sm-12">
             <h2>Chat Messages <?= $this->Html->link('Back',['controller'=>'conversations','action'=>'index'],['class'=>'btn btn-primary float-right']); ?></h2>
             
-            <div style="height:450px; overflow:scroll;">
-            <?php if(!empty($messages)){ 
-                    foreach ($messages['chats'] as $key=>$val){
-                        $class = '';
-                        $time = 'time-right';
+            <div id="loadchats" style="height:600px; overflow:scroll; background-color: #fff; padding: 10px;">
+                <?php if(!empty($mess)){
+                    
+                    foreach ($mess['chats'] as $key=>$val){
+                        $class = 'darker';
+                        $time = 'time-left';
                        if($auth != $val['sender_id']){
-                           $class = 'darker';
-                           $time = 'time-left';
+                           $class = '';
+                           $time = 'time-right';
                        }
                 ?>
             <div class="containernew <?= $class; ?>">
-                <p><?= $val['chat']; ?></p>
+                <p><?= !empty($val['chat'])?$val['chat']:''; ?>
+                    <b>(<?= $this->Custom->getUserName($val['sender_id']); ?>)</b>
+                </p>
                 <span class="<?= $time; ?>"><?= date('d-M-Y H:i A',strtotime($val['created'])); ?></span>
             </div>
-            <?php } } ?>
+            <?php } }
+            
+            ?>
+                
+            </div>
             
             <?php echo $this->Form->create(); ?>
-            <div class="containernew">
-                <?= $this->Form->input('user_id',['type'=>'hidden','value'=>$messages['user_id']]); ?>
-                <?= $this->Form->input('message',['type'=>'text','class'=>'textarea',"placeholder"=>"Type here!",'label'=>false]); ?>
-                <?= $this->Form->input('Send',['type'=>'submit','class'=>'btn btn-primary classsubmit','div'=>FALSE]); ?>
-            </div>
+                <div class="containernew">
+                    <?= $this->Form->input('user_id',['type'=>'hidden','value'=>$mess['user_id']]); ?>
+                    <?= $this->Form->input('message',['type'=>'text','class'=>'textarea',"autocomplete"=>"off","placeholder"=>"Type here!",'label'=>false]); ?>
+                    <?= $this->Form->input('Send',['type'=>'submit','class'=>'btn btn-primary classsubmit','div'=>false]); ?>
+                </div>
             <?php echo $this->Form->end(); ?>
-            </div>
+            
         </div>
     </div>
  
@@ -112,3 +119,19 @@
 .content-wrapper{ height: 100%; }
 .float-right{ float: right; }
 </style>
+<script type="text/javascript">
+    $(function () {
+
+        setInterval(function () {
+
+            $.ajax({
+                url: baseurl + "admin/conversations/messageload/<?php echo $id; ?>",
+                cache: false,
+                success: function (html) {
+                    $("#loadchats").html(html);
+                }
+            });
+        }, 5000);
+
+    });
+</script>

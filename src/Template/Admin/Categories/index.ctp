@@ -34,10 +34,10 @@
                         echo $this->Form->create(false, ['type' => 'get', 'id' => 'filterForm', 'role' => 'form', 'inputDefaults' => ['div' => false, 'label' => false]]);
                         ?>
                         <div class="col-md-3">
-                            <label for="keyword">Keyword</label>
+                            <label for="keyword">Name</label>
 
                             <div class="input-group">
-                                <?php echo $this->Form->input('keyword', ['class' => 'form-control input-sm pull-right', 'placeholder' => 'Keyword', 'label' => false, 'value' => !empty($this->request->query['keyword']) ? $this->request->query['keyword'] : '']); ?>
+                                <?php echo $this->Form->input('keyword', ['class' => 'form-control input-sm pull-right', 'placeholder' => 'Name', 'label' => false, 'value' => !empty($this->request->query['keyword']) ? $this->request->query['keyword'] : '']); ?>
                                 <div class="input-group-btn">
                                     <?php echo $this->Form->button('<i class="fa fa-search"></i>', ['class' => 'btn btn-sm btn-default', 'type' => 'Submit', 'escape' => false]); ?>
                                 </div>
@@ -52,8 +52,9 @@
                             <tr>
                                 <th scope="col"><?= $this->Paginator->sort('id') ?></th>
                                 <th scope="col"><?= $this->Paginator->sort('name') ?></th>
+                                <th scope="col"><?= $this->Paginator->sort('name hebrew') ?></th>
                                 <th scope="col"><?= $this->Paginator->sort('status') ?></th>
-                                <th scope="col"><?= $this->Paginator->sort('created') ?></th>
+                                
                                 <th scope="col" class="actions"><?= __('Actions') ?></th>
                             </tr>
                         </thead>
@@ -63,8 +64,9 @@
                             <tr>
                                 <td><?= $this->Number->format($category->id) ?></td>
                                 <td><?= h($category->name) ?></td>
-                                <td><?= $this->Number->format($category->status) ?></td>
-                                <td><?php if ($category->created != "") echo $category->created->format('d-M-Y'); ?></td>
+                                <td><?= h($category->namehe) ?></td>
+                                <td><?= ($category->status == '1')?'Active':'InActive'; ?></td>
+                                
                                 <td class="actions">
                                     <?= $this->Html->link(__('<i class="fa fa-fw fa-eye"></i> View'), ['action' => 'view', $category->id], ['class' => 'btn btn-primary btn-sm', 'escape' => false]) ?>
                                     <?= $this->Html->link(__('<i class="fa fa-edit"></i> Edit'), ['action' => 'edit', $category->id], ['class' => 'btn btn-success btn-sm', 'escape' => false]) ?>

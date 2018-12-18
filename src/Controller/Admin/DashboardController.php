@@ -21,7 +21,7 @@ class DashboardController extends AppController {
     public function index() {
         $users = TableRegistry::get('Users');
         $property = TableRegistry::get('Properties');
-        
+        $total_projects = 0;
         $emailtemplates = TableRegistry::get('EmailTemplates');
         $this->viewBuilder()->layout('default1');
         $count_users = $users->find()->where(['status' =>1,'role_id'=>'2'])->count();
@@ -37,18 +37,20 @@ class DashboardController extends AppController {
             $auction = $property->find()->where(['status'=>2,'user_id'=>$this->Auth->user('id')])->count();
             $sold = $property->find()->where(['status'=>3,'user_id'=>$this->Auth->user('id')])->count();
             $inactive = $property->find()->where(['status'=>4,'user_id'=>$this->Auth->user('id')])->count();
+            $myassign = $property->find()->where(['assign'=>$this->Auth->user('id')])->count();
             $projects = TableRegistry::get('projects')->find()->where(['user_id' =>$this->Auth->user('id') ])->toArray();
         }else{
-            $pending = $property->find()->where(['status'=>0])->count();
-            $onsale = $property->find()->where(['status'=>1])->count();
-            $auction = $property->find()->where(['status'=>2])->count();
-            $inactive = $property->find()->where(['status'=>4])->count();
-            $sold = $property->find()->where(['status'=>3])->count();
+            $pending = $property->find()->where(['Properties.status'=>0,'Properties.is_complete' => '1'])->contain(['Users'])->count();
+            $onsale = $property->find()->where(['Properties.status'=>1,'Properties.is_complete' => '1'])->contain(['Users'])->count();
+            $auction = $property->find()->where(['Properties.status'=>2,'Properties.is_complete' => '1'])->contain(['Users'])->count();
+            $inactive = $property->find()->where(['Properties.status'=>4,'Properties.is_complete' => '1'])->contain(['Users'])->count();
+            $sold = $property->find()->where(['Properties.status'=>3,'Properties.is_complete' => '1'])->contain(['Users'])->count();
+            $total_projects = TableRegistry::get('projects')->find()->where(['projects.status' =>'1' ])->contain(['Users'])->count();
         }
         
        // $jsIncludes = ['admin/jquery.flot','admin/jquery.flot.pie','admin/flot-data'];
         
-        $this->set(compact('pending','onsale','auction','sold','inactive','count_users','leader_users','projects','leader_users','agent_users','manager_users', 'building_users','count_emailtemplates'));
+        $this->set(compact('pending','onsale','auction','sold','inactive','count_users','myassign','leader_users','projects','leader_users','agent_users','manager_users', 'building_users','count_emailtemplates','total_projects'));
     }
     
     public function location(){

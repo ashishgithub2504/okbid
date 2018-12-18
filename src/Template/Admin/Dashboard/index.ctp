@@ -1,14 +1,13 @@
 <section class="content-header">
     <h1>
         Dashboard
-        <small>Control panel</small>
     </h1>
 </section>
 <!-- Main content -->
 <section class="content">
 
     <!-- Small boxes (Start box) -->
-    <div class="row">
+    <div class="row card">
 
         <?php if (in_array($this->request->session()->read('Auth.admin.role_id'), array('1', '5', '3', '4', '6'))) { ?>
 
@@ -17,10 +16,10 @@
                 <div class="small-box bg-orange">
                     <div class="inner">
                         <h3><?= $pending; ?></h3>
-                        <p>Total Pending Properties</p>
+                        <p><?= __('Total Pending Properties'); ?></p>
                     </div>
                     <div class="icon">
-                        <i class="ion-ios-people"></i>
+                        <i class="fa fa-home"></i>
                     </div>
                     <?php echo $this->Html->link('More info <i class="fa fa-arrow-circle-right"></i>', ['controller' => 'properties', 'action' => 'index'], ['escape' => false, 'class' => 'small-box-footer']); ?>
                 </div>
@@ -34,7 +33,7 @@
                         <p>Total For Sale Properties</p>
                     </div>
                     <div class="icon">
-                        <i class="ion-ios-people"></i>
+                        <i class="fa fa-home"></i>
                     </div>
                     <?php echo $this->Html->link('More info <i class="fa fa-arrow-circle-right"></i>', ['controller' => 'properties', 'action' => 'sale'], ['escape' => false, 'class' => 'small-box-footer']); ?>
                 </div>
@@ -48,7 +47,7 @@
                         <p>Total Sold Properties</p>
                     </div>
                     <div class="icon">
-                        <i class="ion-ios-people"></i>
+                        <i class="fa fa-home"></i>
                     </div>
                     <?php echo $this->Html->link('More info <i class="fa fa-arrow-circle-right"></i>', ['controller' => 'properties', 'action' => 'sold'], ['escape' => false, 'class' => 'small-box-footer']); ?>
                 </div>
@@ -62,11 +61,26 @@
                         <p>Total Inactive Properties</p>
                     </div>
                     <div class="icon">
-                        <i class="ion-ios-people"></i>
+                        <i class="fa fa-home"></i>
                     </div>
                     <?php echo $this->Html->link('More info <i class="fa fa-arrow-circle-right"></i>', ['controller' => 'properties', 'action' => 'inactive'], ['escape' => false, 'class' => 'small-box-footer']); ?>
                 </div>
             </div>
+			
+            <div class="col-lg-3 col-xs-6">
+                <!-- small box -->
+                <div class="small-box bg-olive" >
+                    <div class="inner">
+                        <h3><?= $auction; ?></h3>
+                        <p>Total Auction Properties</p>
+                    </div>
+                    <div class="icon">
+                        <i class="fa fa-home"></i>
+                    </div>
+                    <?php echo $this->Html->link('More info <i class="fa fa-arrow-circle-right"></i>', ['controller' => 'properties', 'action' => 'auction'], ['escape' => false, 'class' => 'small-box-footer']); ?>
+                </div>
+            </div>
+
             <?php
         }
 
@@ -76,11 +90,11 @@
                 <!-- small box -->
                 <div class="small-box bg-teal" >
                     <div class="inner">
-                        <h3><?= count($assignproty); ?></h3>
-                        <p>Total Assign Properties</p>
+                        <h3><?= $myassign; ?></h3>
+                        <p>Assign Properties</p>
                     </div>
                     <div class="icon">
-                        <i class="ion-ios-people"></i>
+                        <i class="fa fa-home"></i>
                     </div>
                     <?php echo $this->Html->link('More info <i class="fa fa-arrow-circle-right"></i>', ['controller' => 'properties', 'action' => 'assignpro'], ['escape' => false, 'class' => 'small-box-footer']); ?>
                 </div>
@@ -145,9 +159,11 @@
                     <?php echo $this->Html->link('More info <i class="fa fa-arrow-circle-right"></i>', ['controller' => 'users', 'action' => 'contractor'], ['escape' => false, 'class' => 'small-box-footer']); ?>
                 </div>
             </div>
+        
+            <?php if (in_array($this->request->session()->read('Auth.admin.role_id'), array('1'))) { ?>
             <div class="col-lg-3 col-xs-6">
                 <!-- small box -->
-                <div class="small-box bg-yellow" >
+                <div class="small-box bg-yellow margin0">
                     <div class="inner">
                         <h3><?= $manager_users ?></h3>
                         <p>Total Managers</p>
@@ -158,6 +174,22 @@
                     <?php echo $this->Html->link('More info <i class="fa fa-arrow-circle-right"></i>', ['controller' => 'users', 'action' => 'manager'], ['escape' => false, 'class' => 'small-box-footer']); ?>
                 </div>
             </div>
+			
+            <div class="col-lg-3 col-xs-6">
+                <!-- small box -->
+                <div class="small-box bg-maroon" >
+                    <div class="inner">
+                        <h3><?= $total_projects; ?></h3>
+                        <p>Total Project</p>
+                    </div>
+                    <div class="icon">
+                        <i class="ion-ios-home"></i>
+                    </div>
+                    <?php echo $this->Html->link('More info <i class="fa fa-arrow-circle-right"></i>', ['controller' => 'projects', 'action' => 'index'], ['escape' => false, 'class' => 'small-box-footer']); ?>
+                </div>
+            </div>
+
+            <?php } ?>
 
         <?php } ?>
 
@@ -174,7 +206,7 @@
                                 <p><?= ucfirst($val['name']) . ' Project'; ?></p>
                             </div>
                             <div class="icon">
-                                <i class="ion-ios-people"></i>
+                                <i class="ion-ios-home"></i>
                             </div>
                             <?php echo $this->Html->link('More info <i class="fa fa-arrow-circle-right"></i>', ['controller' => 'properties', 'action' => 'project', $val->id], ['escape' => false, 'class' => 'small-box-footer']); ?>
                         </div>
@@ -226,7 +258,21 @@
       }
     </script>
 
-    <div id="piechart" style="width: 1200px; height: 500px;"></div>
+    <div id="piechart" class="card"></div>
 
 
 </section>
+<style type="text/css">
+.card{
+    background: #fff;
+    min-height: 10px 50px;
+    box-shadow: 0 12px 10px rgba(0, 0, 0, 0.2);
+    position: relative;
+    margin: 5px;
+	padding:20px 5px 5px 5px;
+    -webkit-border-radius: 2px;
+    -moz-border-radius: 2px;
+    -ms-border-radius: 2px;
+    border-radius: 2px;
+}
+</style>

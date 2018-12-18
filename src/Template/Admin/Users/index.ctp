@@ -1,13 +1,13 @@
-
 <?php
 /**
   * @var \App\View\AppView $this
   */
+use Cake\Core\Configure;
 ?>
 <section class="content-header">
     <h1>
         Users Management
-        
+        <small>All Seller/buyer List</small>
     </h1>
 </section>
 
@@ -17,6 +17,7 @@
             <?php echo $this->Flash->render(); ?>
         </div>
     </div>
+    
     <div class="row">
         <div class="col-xs-12">
             <div class="box">
@@ -33,7 +34,7 @@
                 
                 <!-- /.box-header -->
 
-                <div class="box-body" style="position:fixed;background: #fff;top: 130px;">
+                <div class="box-body">
                     <div class="row" id="search">
                         <?php
                         echo $this->Form->create(false, ['type' => 'get', 'id' => 'filterForm', 'role' => 'form', 'inputDefaults' => ['div' => false, 'label' => false]]);
@@ -49,6 +50,7 @@
                                                 'inputContainer' => '<div class="col-md-4 input {{type}}{{required}}">{{content}}</div>',
                                             ],
                                             'placeholder' => 'Name', 
+                                            'autocomplete' => 'off',
                                             'label' => false, 
                                             'value' => !empty($this->request->query['keyword']) ? $this->request->query['keyword'] : ''
                                     ]); ?>
@@ -166,13 +168,14 @@
                         </div>
                         <?= $this->Form->end() ?>
                     </div>
-                    <div class="input-group-btn col-md-4">
-                        <?php echo $this->Form->button('<i class="fa fa-search"></i> Hide / Show', ['class' => 'btn btn-sm btn-default top5 hidesearch', 'title'=>'Hide','type' => 'button', 'escape' => false]); ?>
-                    </div>
+                    
                     
                 </div>
-                
-                <div id="listing" class="box-body table-responsive no-padding" style="margin-top: 180px;">
+            </div>
+            
+            <div class="box">
+                <div class="box-body table-responsive no-padding tablescroll">
+                    
                     <table class="table table-hover">
                         <thead>
                             <tr>
@@ -198,14 +201,16 @@
                                 <td><?= h($user->email) ?></td>
                                 <td><?= isset($user->role->name)?$user->role->name:''; ?></td>
                                 
-                                <td><?= $user->phone ?></td>
+                                <td><?= !empty($user->prefix)?$user->prefix:''; echo ' '. $user->phone ?></td>
                                 <td><?= ($user->status == 1)?'Active':'Inactive'; ?></td>
                                 <td class="actions">
                                     <?php //$this->Html->link(__('<i class="fa fa-fw fa-eye"></i> View'), ['controller'=>'properties','action' => 'view', $user->id], ['class' => 'btn btn-primary btn-sm', 'escape' => false]) ?>
                                     <?php // $this->Html->link(__('<i class="fa fa-fw fa-eye"></i> Seller'), ['controller'=>'properties','action' => 'seller', $user->id], ['class' => 'btn btn-primary btn-sm', 'escape' => false]) ?>
                                     <?php echo $this->Html->link(__('<i class="fa fa-fw fa-eye"></i> View'), ['action' => 'view', $user->id], ['class' => 'btn btn-primary btn-sm', 'escape' => false]) ?>
                                     <?= $this->Html->link(__('<i class="fa fa-comments-o"></i> Send Notification'), ['action' => 'message', $user->id], ['class' => 'btn btn-sm btn-info','title'=>'Send message' ,'escape' => false]) ?>
-                                    <?= $this->Form->postLink('<i class="fa fa-trash"></i> Delete', ['action' => 'delete', $user->id], ['confirm' => __('Are you sure you want to delete # {0}?', $user->id), 'class' => 'btn btn-danger btn-sm', 'escape' => false]) ?>
+                                    <?php if (in_array($this->request->session()->read('Auth.admin.role_id'), array('1'))) { ?>
+                                        <?= $this->Form->postLink('<i class="fa fa-trash"></i> Delete', ['action' => 'delete', $user->id], ['confirm' => __('Are you sure you want to delete # {0}?', $user->id), 'class' => 'btn btn-danger btn-sm', 'escape' => false]) ?>
+                                    <?php } ?>
                                 </td>
                             </tr>
                             <?php endforeach;

@@ -47,12 +47,16 @@ class AppController extends Controller {
      * @return void
      */
     public $status = false;
+    public $pagination =  '20';
+    public $limit5 =  '5';
+    public $offset = '0';
+    public $pageno;
     public $message = '';
     public $responseData = [];
     public $code = 200;
     public $errors = '';
-    public $authAllowedMethods = ['login', 'register', 'forgot', 'reset', 'home', 'index', 'view', 'updatedetail', 'broadcast', 'resendotp',                                   
-                                  'checkNotification','destroy','fblogin'];
+    public $authAllowedMethods = ['login', 'register', 'forgot', 'home', 'index', 'reset','view', 'getcsv','updatedetail', 'broadcast', 'resendotp',                                   
+                                  'checkNotification','destroy','fblogin','auctionstart'];
     public $testMethods = ['testwebservices','varification'];
     public $uploadtMethods = ['register','images','propertyimages','editprofile','fblogin'];
     public $loggedInUserId = null;
@@ -62,158 +66,168 @@ class AppController extends Controller {
         // request 
         'cannot_access_en' => 'You are not authrize to access login make it authorized',
         'invalid_login_en' => 'Mobile or password is incorrect',
+        'invalid_login_he' => 'מספר הנייד או הסיסמה שגויים',
 	'invalid_pass_en' => 'Password is incorrect',
+	'invalid_pass_he' => 'הסיסמה שגוייה',
         'invalid_token_en' => 'Invalid Token',
-        'acc_expiry_en' => 'Your account has been expired. Please contact to administrator',
+        'invalid_token_he' => 'סימן לא חוקי',
         'invalid_api_token_en' => 'Invalid Api Token',
         'invalid_request_en' => 'Invalid Request',
         'invalid_csrf_token_en' => 'Unable to identify request origin',
+        'invalid_csrf_token_he' => 'Unable to identify request origin',
+		
         'params_not_available_en' => 'The required parameter is not available in the request',
         'empty_request_en' => 'Request data is empty',
         'invalid_params_en' => 'Requested parameter should be numeric',
         'blank_params_en' => 'Some of your parameter is blank',
         'invalid_device_en' => 'You have loggedIn on another device.',
-        'activation_not_en' => 'You activation code is not valid.',
+        
+        'activation_not_en' => 'Activation code is not valid',
+        'activation_not_he' => 'קוד ההפעלה אינו חוק',
+        
         'activation_en' => 'You account has been activated successfully.',
+        'activation_he' => 'החשבון שלך הופעל בהצלחה',
+        
         'new_update_en' => 'New update received.',
         'profile_update_en' => 'Profile has been updated successfully.',
+        'profile_update_he' => 'הפרופיל שלך עודכן בהצלחה',
         'prop_image_en' => 'Property image has been deleted.',
-        'new_update_gr' => 'Νέα ενημέρωση ελήφθη',
+        'prop_image_he' => 'התמונה נמחקה',
+        'autobid_en' => 'Bid must be higher than ',
+        'new_update_gr' => 'הצעת המחיר חייבת להיות גבוהה מ ',
         // server error
         'technical_error_en' => 'Some technical error has occurred',
         'page_not_found_en' => 'Page not found',
+        'page_not_found_he' => 'דף לא נמצא',
         'no_record_found_en' => 'No record found',
+        'no_record_found_he' => 'לא נמצאו רשומות',
         'prop_edit_en' => 'Property edit successfully',
         //account
         'invalid_account_en' => 'Entered Email address is invalid',
+        'invalid_account_he' => 'כתובת הדוא"ל אינה חוקית',
+        
         'verification_account_en' => 'Entered verification code is invalid',
+        'verification_account_he' => 'קוד האימות שהוזן אינו חוקי',
+        
         'deactivated_account_en' => 'Your account has been deactivated, Please contact Administrator for further assistance',
+        'deactivated_account_he' => 'החשבון שלך בוטל. יש ליצור קשר עם מנהל המערכת לקבלת סיוע נוסף',
+        
         'verification_pending_en' => 'Your email address verification is pending',
+        'verification_pending_he' => 'כתובת הדוא"ל עדיין לא אומתה',
+        
         'forgot_password_en' => 'A verification code has been sent to your email account',
+        'forgot_password_he' => 'קוד אימות נשלח לחשבון הדוא"ל שלך',
+        
         'process_failed_en' => 'Your process failed. Please try again',
+		
         'reset_password_en' => 'Your password has been updated successfully.',
+        'reset_password_he' => 'הסיסמה שלך עודכנה בהצלחה',
+        
         'account_deleted_en' => 'Your account has been deleted successfully.',
+        'account_deleted_he' => 'החשבון שלך נמחק בהצלחה',
+        
         'guardian_update_en' => 'Guardian profile update successfully.',
-        'favourite_en' => 'Property favourite successfully',
-        'unfavourite_en' => 'Property unfavourite successfully',
-        'reject_en' => 'Property rejected successfully',
+        
+        'favourite_en' => 'Property save in favourite',
+        'favourite_he' => 'הנכס נשמר במועדפים שלך',
+        
+        'unfavourite_en' => 'Property removed from favorites',
+        'unfavourite_he' => 'הנכס הוסר מהמועדפים שלך',
+        
+        'reject_en' => 'Property declined',
+        'reject_he' => 'הנכס נדחה',
+        
         //login signup logout
         'logout_success_en' => 'You have logged out successfully',
+        'logout_success_he' => 'יצאת מהמערכת',
+        
         'login_success_en' => 'You have logged in successfully',
+        'login_success_he' => 'נרשמת בהצלחה',
+        
         'signup_success_en' => 'A verification code has been sent to your mobile number, Please verify your account.',
+        'signup_success_he' => 'קוד אימות נשלח למספר הנייד שלך, יש לאמת את החשבון שלך',
         // profile
         'profile_not_found_en' => 'Profile you have requested did not found',
         'profile_update_en' => 'Your profile has been updated successfully',
+        'profile_update_he' => 'הפרופיל שלך עודכן בהצלחה',
+        
         'property_view_en' => 'You have successfully view this property', 
-        'property_sign_en' => 'You have successfully signature this property', 
-        'property_quote_en' => 'You have successfully quote this property', 
+        'property_view_he' => 'You have successfully view this property', 
+        
+        'property_sign_en' => 'You successfully approved the commission payment', 
+        'property_sign_he' => 'תשלום עבור נכס זה אושר בהצלחה', 
+        
+        'property_quote_en' => 'You have successfull quote this property', 
+        'property_quote_he' => 'הצעתך הוגשה בהצלחה', 
+        
         'image_upload_en' => 'Image has been uploaded successfully',
-        'image_not_upload_en' => 'Image has not been uploaded successfully',
+        'image_upload_he' => 'התמונה הועלתה בהצלחה',
+        
+        'image_not_upload_en' => 'Image has not been uploaded. Try again',
+        'image_not_upload_he' => 'תקלה! התמונה לא הועלתה. נסה שוב',
         
         'update_device_en' => 'Updated successfully',
+        'update_device_he' => 'Updated successfully',
+        
         'old_password_en' => 'Old password is not correct',
+        'old_password_he' => 'הסיסמה הישנה שהזנת שגויה',
+        
         'record_found_en' => 'List found.',
-        'activity_delete_en' => 'Activity has been deleted.',
-        'activity_not_delete_en' => 'Activity has not been deleted.',
-        'staff_delete_en' => 'Staff has been deleted.',
-        'staff_not_delete_en' => 'Staff has not been deleted.',
-        'child_add_en' => 'Child has been added successfully.',
-        'guardian_add_en' => 'Guardian has been added successfully.',
-        'guardian_already_en' => 'Guardian already added.',
-        'child_delete_en' => 'Child has been deleted.',
-        'child_not_delete_en' => 'Child has not been deleted.',
-        'guardian_delete_en' => 'Guardian has been deleted.',
-        'guardian_not_delete_en' => 'Guardian has not been deleted.',
+        'record_found_he' => 'הרשימה נמצאה',
+        
+        
         'data_save_en' => 'Data saved successfully.',
-        'prop_sold_en' => 'Property has been sold successfully',
+        'data_save_he' => 'הנתונים נשמרו בהצלחה',
+        
+        'prop_sold_en' => 'Congratulations! Your property has been successfully sold',
+        'prop_sold_he' => 'מזל טוב! הנכס שלך נמכר בהצלחה',
+        
         'auto_bid_en' => 'Your automatic bid has been placed',
-        'auto_err_bid_en' => 'Your automatic bid has not been placed',
-        'pro_decln_bid_en' => 'Bid successfully decline',
+        'auto_bid_he' => 'מערכת ההצעות האוטומטיות עובדת בשבילך',
+        
+        'auto_err_bid_en' => 'Your automatic bid has not been placed. Try again',
+        'auto_err_bid_he' => 'מערכת ההצעות האוטומטיות לא קיבלה את בקשתך. נסה שוב',
+        
+        'pro_decln_bid_en' => 'Your bid has been declined',
+        'pro_decln_bid_en' => 'הצעת המחיר שלך נדחתה',
+        
         'prop_act_en' => 'Property activate successfully',
+        'prop_act_he' => 'Property activate successfully',
+        
         'prop_inact_en' => 'Property Inactivate successfully',
+        'prop_inact_he' => 'פרסום הנכס הוסר',
+        
         'prop_ownership_en' => 'Property ownership document has been deleted',
+        'prop_ownership_he' => 'Property ownership document has been deleted',
+        
         'prop_owners_en' => 'Property owners has been deleted',
-        // user images
+        'prop_owners_he' => 'Property owners has been deleted',
+        
+        'bid_val_en' => 'Bid must be higher than ',
+        'bid_val_he' => 'הצעת המחיר חייבת להיות גבוהה מ ',
+        
         'invalid_extension_en' => 'Image not uploaded because of extension issue.',
+        
+        'country_list_en' => 'Country listing successfully',
+        
+        'state_list_en' => 'States listing successfully',
+        
         'image_success_en' => 'Profile pic uploaded successfully.',
-        // Orders
-        'staff_add_en' => 'Staff member has been added successfully',
-        'staff_not_add_en' => 'Staff member has not been added successfully',
-        'order_success_en' => 'Your order has placed',
-        'order_update_en' => 'Your order has updated',
-        'message_send_en' => 'Massage has been sent',
-        'card_validate_fail_en' => 'Card verification failed',
-        'card_update_en' => 'Card updated',
-        'update_status_en' => 'Status updated',
-        'comment_saved_en' => "Comment saved",
-        'activity_added_en' => "New activity has been added",
-        // greek message here
-        'cannot_access_gr' => 'Δεν έχετε εξουσιοδότηση για σύνδεση',
-        'invalid_login_gr' => 'Η διεύθυνση ηλεκτρονικού ταχυδρομείου ή ο κωδικός πρόσβασης είναι εσφαλμένος',
-        'invalid_token_gr' => 'Μη έγκυρο Token',
-        'acc_expiry_gr' => 'Η συνδρομής σας έχει λήξει. Παρακαλώ επικοινωνήστε με τον διαχειριστή',
-        'invalid_api_token_gr' => 'Μη έγκυρο Api Token',
-        'invalid_request_gr' => 'Λανθασμένη αίτηση',
-        'invalid_csrf_token_gr' => 'Δεν είναι δυνατή η αναγνώριση της προέλευσης της αίτησης',
-        'params_not_available_gr' => 'Η απαιτούμενη παράμετρος δεν είναι διαθέσιμη στην αίτηση',
-        'empty_request_gr' => '"Τα αιτήματα δεδομένων είναι κενά',
-        'invalid_params_gr' => '"Η ζητούμενη παράμετρος πρέπει να είναι αριθμητική"',
-        'blank_params_gr' => '"Ορισμένες από τις παραμέτρους σας είναι κενές',
-        'invalid_device_gr' => 'Έχετε συνδεθεί σε άλλη συσκευή.',
-        'activation_not_gr' => 'Ο κωδικός ενεργοποίησης δεν είναι έγκυρος.',
-        // server error
-        'technical_error_gr' => '"Παρουσιάστηκε κάποιο τεχνικό σφάλμα"',
-        'page_not_found_gr' => '"Η σελίδα δεν βρέθηκε"',
-        'no_record_found_gr' => 'Δεν Βρέθηκε Αρχείο',
-        'invalid_pass_gr' => 'ο κωδικός πρόσβασής σας είναι εσφαλμένος',
-        'no_activity_found_gr' => "Δεν έχει προστεθεί αναφορά",
-        'no_activity_found_en' => "No activity has been added yet",
-        //account
-        'invalid_account_gr' => 'Η καταχωρημένη διεύθυνση ηλεκτρονικού ταχυδρομείου δεν είναι έγκυρη',
-        'verification_account_gr' => 'To PIN που έχει εισαχθεί δεν είναι έγκυρο',
-        'deactivated_account_gr' => 'Ο λογαριασμός σας απενεργοποιήθηκε, παρακαλώ επικοινωνήστε με τον διαχειριστή για περαιτέρω βοήθεια',
-        'verification_pending_gr' => 'Η επαλήθευση διεύθυνσης ηλεκτρονικού ταχυδρομείου εκκρεμεί',
-        'forgot_password_gr' => '"Το PIN έχει σταλεί στο ηλεκτρονικό ταχυδρομείο σας"',
-        'process_failed_gr' => 'Η διαδικασία απέτυχε. Παρακαλώ προσπαθησε ξανα',
-        'reset_password_gr' => 'Ο κωδικός πρόσβασής σας ενημερώθηκε με επιτυχία.',
-        'account_deleted_gr' => 'Ο λογαριασμός σας έχει διαγραφεί με επιτυχία.',
-        'guardian_update_gr' => 'Guardian profile update successfully.',
-        //login signup logout
-        'logout_success_gr' => 'Έχετε αποσυνδεθεί με επιτυχία',
-        'login_success_gr' => 'Έχετε συνδεθεί με επιτυχία',
-        'signup_success_gr' => '"Ένας σύνδεσμος επαλήθευσης έχει σταλεί στον λογαριασμό σας ηλεκτρονικού ταχυδρομείου, επαληθεύστε τον λογαριασμό σας".',
-        // profile
-        'profile_not_found_gr' => '"Το προφίλ που ζητήσατε δεν βρέθηκε"',
-        'profile_update_gr' => 'Το προφίλ ανανεώθηκε επιτυχώς',
-        'update_device_gr' => '"Ενημέρωση με επιτυχία"',
-        'old_password_gr' => 'Ο παλιός κωδικός δεν είναι σωστός',
-        'record_found_gr' => 'List found.',
-        'activity_delete_gr' => 'Η δραστηριότητα έχει διαγραφεί',
-        'activity_not_delete_gr' => 'Η δραστηριότητα δεν έχει διαγραφεί',
-        'staff_delete_gr' => 'Το προσωπικό έχει διαγραφεί',
-        'staff_not_delete_gr' => 'Το προσωπικό δεν έχει διαγραφεί',
-        'child_add_gr' => 'Το παιδί έχει προστεθεί με επιτυχία',
-        'guardian_add_gr' => 'Ο Γονέας / Κηδεμόνας έχει προστεθεί με επιτυχία',
-        'guardian_already_gr' => 'Ο Γονέας / Κηδεμόνας έχει ήδη προσθέσει',
-        'child_delete_gr' => 'Το παιδί έχει διαγραφεί',
-        'child_not_delete_gr' => 'Το παιδί δεν έχει διαγραφεί',
-        'guardian_delete_gr' => 'Ο Γονέας / Κηδεμόνας έχει διαγραφεί',
-        'guardian_not_delete_gr' => 'Ο Γονέας / Κηδεμόνας δεν έχει διαγραφεί.',
-        'data_save_gr' => 'Τα δεδομένα αποθηκεύτηκαν με επιτυχία',
-        // user images
-        'invalid_extension_gr' => 'Η εικόνα δεν μεταφορτώθηκε λόγω συμβατότητας',
-        'image_success_gr' => 'Η φωτογραφία του προφίλ φορτώθηκε με επιτυχία',
-        // Orders
-        'staff_add_gr' => 'Το μέλος του προσωπικού έχει προστεθεί με επιτυχία',
-        'staff_not_add_gr' => 'Το μέλος του προσωπικού δεν έχει προστεθεί με επιτυχία',
-        'order_success_gr' => 'Your order has placed',
-        'order_update_gr' => 'Your order has updated',
-        'message_send_gr' => 'Το μήνυμα έχει σταλεί',
-        'card_validate_fail_gr' => 'Card verification failed',
-        'card_update_gr' => 'Card updated',
-        'update_status_gr' => 'Status updated',
-        'comment_saved_gr' => "Comment saved",
-        'activity_added_gr' => "Έχει προστεθεί νέα δραστηριότητα",
+        'image_success_he' => 'תמונת הפרופיל עודכנה',
+        
+        'message_send_en' => 'Massage sent',
+        'message_send_he' => 'הודעה נשלחה',
+        
+        /* Push notification messages */
+        'prop_offer_en' => 'Congratulations! you have got new offer',
+        'prop_offer_he' => 'מזל טוב! הנכס שלך נמכר בהצלחה',
+        
+        'prop_won_en' => 'Congratulations! you have won property',
+        'prop_won_he' => 'מזל טוב! הנכס שלך נמכר בהצלחה',
+        
+        'prop_auction_en' => 'Auction will start at 10 AM',
+        'prop_auction_he' => 'מזל טוב! הנכס שלך נמכר בהצלחה',
+        
     );
 
     public function initialize() {
@@ -252,9 +266,9 @@ class AppController extends Controller {
             $this->getJsonInput();
         }
         if (!in_array($this->request->action, $this->testMethods)) {
-            $this->verifyRequest();
             $this->checkAuthToken();
         }
+        $this->verifyRequest();
     }
 
     public function beforeFilter(Event $event) {
@@ -272,7 +286,7 @@ class AppController extends Controller {
         $authInformation = getallheaders();
         
         $this->settings['csrf_token'] = '11';
-        $this->language = isset($authInformation['language'])?$authInformation['language']:'en';
+        $this->language = isset($authInformation['Language'])?$authInformation['Language']:'en';
         $this->paramsAvailability($authInformation, array('Csrf-Token'));
         if ($authInformation['Csrf-Token'] != $this->settings['csrf_token']) {
             $this->status = false;

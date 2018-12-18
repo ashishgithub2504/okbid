@@ -21,16 +21,7 @@
         ?>
         <div class="box-body">
             <div class="row">
-                <div class="col-md-6">
-                    <div class="form-group">
-                        <?php echo $this->Form->input('old_password', ['type' => 'password', 'class' => 'form-control', 'placeholder' => 'Current Password', 'label' => ['text' => "Current Password"]]); ?>
-                    </div><!-- /.form-group -->
-
-
-
-
-                </div><!-- /.col -->
-
+                
                 <div class="col-md-6">
                     <div class="form-group">
                         <?php echo $this->Form->input('new_password', ['type' => 'password', 'class' => 'form-control', 'placeholder' => 'New Password', 'label' => ['text' => "New Password"]]); ?>

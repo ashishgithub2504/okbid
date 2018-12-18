@@ -23,7 +23,7 @@ class UsersController extends AppController {
         
         $this->authAllowedMethods = ['login', 'register', 'forgot', 'reset','varification'];
         $this->Messages = TableRegistry::get('Messages');
-        $this->ChildsGuardians = TableRegistry::get('ChildsGuardians');
+        $this->Users = TableRegistry::get('users');
         $this->PropertyAutobids = TableRegistry::get('property_autobids');
     }
 
@@ -85,7 +85,7 @@ class UsersController extends AppController {
         if ($this->request->is('post') && !empty($this->request->data)) {
             
             $this->paramsValidation(array('fbid' => 'notBlank',"email"=>'notBlank','device_token'=>'notBlank','device_type'=>'notBlank'));
-            $users = $this->Users->find()->where(['fb_id'=> $this->request->data['fbid']])->first();
+            $users = $this->Users->find()->where(['OR' =>['fb_id'=> $this->request->data['fbid'] , 'email'=> $this->request->data['email']]])->first();
            
             if($users){
                 $data = $this->_loginResponse($users['id'], $users, $users['auth_token']);
@@ -136,6 +136,7 @@ class UsersController extends AppController {
 
         public function varification(){
          if ($this->request->is('post') && !empty($this->request->data)) {
+             
              $this->paramsValidation(array('email'=>'notBlank','activation_code' => 'notBlank'));
              $users = $this->Users->find()->where(['email'=>$this->request->data['email'],'activation_code' => $this->request->data['activation_code'],'status'=>'0'])->first();
              if(!empty($users)){
@@ -200,10 +201,18 @@ class UsersController extends AppController {
         $user = $this->Users->patchEntity($user, $user_data);
         $this->Users->save($user);
         
+        if($user['flaghe'] == '1'){
+            $user_data['country_code'] = substr($user['phone'], 0, 3);
+            $user_data['phone'] = substr($user['phone'],3,10);
+        }else{
+            $user_data['country_code'] =  $user['prefix'];
+            $user_data['phone'] = $user['phone'];
+        }
         $user_data['name'] = $user['name'];
         $user_data['last_name'] = $user['last_name'];
         $user_data['email'] = $user['email'];
-        $user_data['phone'] = $user['phone'];
+        
+        $user_data['address'] = $user['address'];
         $user_data['gender'] = $user['gender'];
         $user_data['address'] = $user['address'];
         $user_data['id_number'] = $user['id_number'];
@@ -212,6 +221,8 @@ class UsersController extends AppController {
         $user_data['notification'] = $user['notification'];
         $user_data['job_place'] = $user['job_place'];
         $user_data['profile_pic'] = $user['profile_pic'];
+        //$user_data['prefix'] = $user['prefix'];
+        $user_data['flaghe'] = $user['flaghe'];
         
         //$user_data['profile_pic'] = ($user['profile_pic'] != '') ? _BASE_ . "uploads/users/" . $user['profile_pic'] : $user['profile_pic'];
         
@@ -221,14 +232,24 @@ class UsersController extends AppController {
             $user_data['profile_pic'] = ($user['profile_pic'] != '') ? $user['profile_pic'] : _BASE_ . 'webroot/img/' . 'avatar.png';
         }
         
+        if($this->language == 'en'){
+            $name = 'name';
+        }else{
+            $name = 'namehe';
+        }
         //$user_data['protype'] = Configure::read('PROTY_'.$this->language);
-        $user_data['airdirection'] = Configure::read('AIR_'.$this->language);
-        $user_data['balconytype'] = Configure::read('BalconyType_'.$this->language);
-        $user_data['category'] = TableRegistry::get('categories')->find('list')->where(['status'=>'1']);
+        $user_data['airdirection'] = (Configure::read('AIR_'.$this->language) === NULL)?'':Configure::read('AIR_'.$this->language);
+        $user_data['balconytype'] = (Configure::read('BalconyType_'.$this->language) === NULL)?'':Configure::read('BalconyType_'.$this->language);
+        $user_data['category'] = TableRegistry::get('categories')->find('all')->select(['id','name'=>$name])->where(['status'=>'1'])->toArray();
+        
+        // [
+//                        'keyField' => 'id',
+//                        'valueField' => $name
+//                    ]
         //$user_data['subcategory'] = Configure::read('SUBCATEGORY_'.$this->language);
-        $user_data['parkingType'] = Configure::read('PARTYPE_'.$this->language);
-        $user_data['propertyCondition'] = Configure::read('PROPCON_'.$this->language);
-        $user_data['AcType'] = Configure::read('AIRCOND_'.$this->language);
+        $user_data['parkingType'] = (Configure::read('PARTYPE_'.$this->language) === NULL)?'':Configure::read('PARTYPE_'.$this->language);
+        $user_data['propertyCondition'] = (Configure::read('PROPCON_'.$this->language) === NULL)?'':Configure::read('PROPCON_'.$this->language);
+        $user_data['AcType'] = (Configure::read('AIRCOND_'.$this->language) === NULL)?'':Configure::read('AIRCOND_'.$this->language);
         $user_data['link_price'] = $this->settings['link_price'];
         return $user_data;
     }
@@ -243,17 +264,18 @@ class UsersController extends AppController {
     public function register() {
         if ($this->request->is('post')) {
             
-            $this->paramsValidation(array('email' => 'notBlank', 'name' => 'notBlank', 'password' => 'notBlank','country_code' => 'notBlank' ,'phone' => 'notBlank'));
+            $this->paramsValidation(array('email' => 'notBlank', 'name' => 'notBlank', 'password' => 'notBlank','phone' => 'notBlank'));
 
             $user = $this->Users->newEntity();
             $this->request->data['activation_code'] = rand(10000,100000);   //md5(rand() . uniqid(''));
             $this->request->data['role_id'] = 2;
-            $this->request->data['prefix'] = $this->request->data['country_code'];
+            $this->request->data['prefix'] = isset($this->request->data['country_code'])?$this->request->data['country_code']:'';
             $this->request->data['username'] = $this->request->data['email'];
+            $this->request->data['flaghe'] = isset($this->request->data['flaghe'])?$this->request->data['flaghe']:'0';
             
             $user = $this->Users->patchEntity($user, $this->request->data);
             if ($this->Users->save($user)) {
-                $phonenum = $this->request->data['country_code'].$this->request->data['phone'];
+                $phonenum = $this->request->data['prefix'].$this->request->data['phone'];
                 $this->sendmessage($this->request->data['activation_code'],$phonenum);
                 $this->status = true;
                 $user['profile_pic'] = _BASE_.'uploads/users/'.$user['profile_pic'];
@@ -308,14 +330,24 @@ class UsersController extends AppController {
             $users->name = isset($this->request->data['name'])?$this->request->data['name']:$users->name;
             $users->last_name = isset($this->request->data['last_name'])?$this->request->data['last_name']:$users->last_name;
             $users->phone = isset($this->request->data['phone'])?$this->request->data['phone']:$users->phone;
+            
+            if(isset($this->request->data['country_code'])){
+                $users->prefix = isset($this->request->data['country_code'])?$this->request->data['country_code']:$users->prefix;
+            }
+                        
             $users->gender = isset($this->request->data['gender'])?$this->request->data['gender']:$users->gender;            
             $users->id_number = isset($this->request->data['id_number'])?$this->request->data['id_number']:$users->id_number;
             $users->address = isset($this->request->data['address'])?$this->request->data['address']:$users->address;
             $users->language = isset($this->request->data['language'])?$this->request->data['language']:$users->language;
             $users->notification = isset($this->request->data['notification'])?$this->request->data['notification']:$users->notification;
             $users->job_place = isset($this->request->data['job_place'])?$this->request->data['job_place']:$users->job_place;
-            $users->profile_pic_file = isset($this->request->data['profile_pic_file'])?$this->request->data['profile_pic_file']:$users->profile_pic_file;
             
+            if(isset($this->request->data['flaghe'])){
+                $users->flaghe = $this->request->data['flaghe'];
+            }
+            
+            $users->profile_pic_file = isset($this->request->data['profile_pic_file'])?$this->request->data['profile_pic_file']:$users->profile_pic_file;
+           
             if ($this->Users->save($users)) {
                 $users->profile_pic = _BASE_.'uploads/users/'.$users->profile_pic;
                 $this->status = true;
@@ -367,7 +399,7 @@ class UsersController extends AppController {
                 if ($this->Users->save($user)) {
 
                     $bodyVars = array("content" => $message, 'template' => false);
-                    //$send = $this->Default->_sendMail($sentEmail, $from, $subject, $bodyVars);
+                    $send = $this->Default->_sendMail($sentEmail, $from, $subject, $bodyVars);
                     $send = 1;
                     if ($send) {
                         $this->message = $this->msgDictonary['forgot_password_'.$this->language];
@@ -391,13 +423,12 @@ class UsersController extends AppController {
 
     Public function reset() {
         if ($this->request->is('post')) {
-            $this->paramsAvailability($this->request->data, array('email', 'reset_key', 'password'));
+            //$this->paramsAvailability($this->request->data, array('email', 'reset_key', 'password'));
             $result = $this->Users->find()->where(['email' => $this->request->data['email'], 'reset_key' => $this->request->data['reset_key']])->first();
             if ($result) {
                 $user = $this->Users->get($result->id);
 
                 $tokenData = array(
-                    //'reset_key' => '',
                     'password' => $this->request->data['password']
                 );
                 $user = $this->Users->patchEntity($user, $tokenData);
@@ -608,12 +639,15 @@ class UsersController extends AppController {
     public function automaticbid(){
         if ($this->request->is('post')) {
             $this->paramsValidation(array('price' => 'notBlank','property_id' => 'notBlank'));
+            
             $proautobid = $this->PropertyAutobids->newEntity();
             
             $this->request->data['user_id'] = $this->loggedInUserId;
             $proautobid = $this->PropertyAutobids->patchEntity($proautobid, $this->request->data);
             
             if ($this->PropertyAutobids->save($proautobid)) {
+                $this->request->data['id'] = $this->request->data['property_id'];
+                $this->Default->autobid($this->request->data, $this->loggedInUserId);
                 $this->message = $this->msgDictonary['auto_bid_' . $this->language];
                 $this->status = true;
             }else{
@@ -641,6 +675,7 @@ class UsersController extends AppController {
         
         $message['title'] = 'Okbid';
         $message['body'] = 'Auction start from 10 Am';
+        $aps['type'] = 'general';
         $aps = ['id' => '1'];
         $this->Default->pushnotification($message , $results, $aps);
          $this->respond();
@@ -715,6 +750,48 @@ class UsersController extends AppController {
                 $this->message = $this->errors = $this->Default->get_errors($message->errors());
             }
         }
+        $this->respond();
+    }
+    
+    public function getcountry(){
+		$res = [];
+        $result = TableRegistry::get('countries')->find('list', [
+                        'keyField' => 'id',
+                        'valueField' => 'name'
+                    ])->where(['status' => '1'])
+                    ->toArray();
+		$i = 0;
+        foreach ($result as $k=>$v){
+			$res[$i]['key'] = $k;
+			$res[$i]['value'] = $v;
+			$i++;
+		}
+        $this->status = true;
+        $this->message = $this->msgDictonary['country_list_'.$this->language];
+        $this->responseData = $res;
+        $this->respond();
+    }
+    
+    public function getstates(){
+        if ($this->request->is('post')) {
+			$res = [];
+            $this->paramsValidation(array('country_id' => 'notBlank'));
+            $result = TableRegistry::get('states')->find('list', [
+                        'keyField' => 'id',
+                        'valueField' => 'name'
+                    ])->where(['status' => '1', 'country_id IN ' => explode(',', $this->request->data['country_id'])])
+                    ->toArray();
+			$i = 0;
+			foreach ($result as $k=>$v){
+				$res[$i]['key'] = $k;
+				$res[$i]['value'] = $v;
+				$i++;
+			}
+			
+            $this->status = true;
+            $this->message = $this->msgDictonary['state_list_'.$this->language];
+            $this->responseData = $res;
+        }        
         $this->respond();
     }
 

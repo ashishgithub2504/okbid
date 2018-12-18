@@ -66,7 +66,7 @@
                             <tr>
                                 <td><?= $this->Number->format($propertytype->id) ?></td>
                                 <td><?= h($propertytype->name) ?></td>
-                                <td><?= h($propertytype->namehr) ?></td>
+                                <td><?= h($propertytype->namehe) ?></td>
                                 <td><?= $propertytype->has('category') ? $this->Html->link($propertytype->category->name, ['controller' => 'Categories', 'action' => 'view', $propertytype->category->id]) : '' ?></td>
                                 <td><?= ($propertytype->status == '1')?'Active':'InActive'; ?></td>
                                 <td><?php if ($propertytype->created != "") echo $propertytype->created->format('d-M-Y'); ?></td>

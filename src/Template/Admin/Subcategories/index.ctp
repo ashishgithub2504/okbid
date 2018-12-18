@@ -65,7 +65,8 @@
                                 <td><?= $this->Number->format($subcategory->id) ?></td>
                                 <td><?= $subcategory->has('category') ? $this->Html->link($subcategory->category->name, ['controller' => 'Categories', 'action' => 'view', $subcategory->category->id]) : '' ?></td>
                                 <td><?= h($subcategory->name) ?></td>
-                                <td><?= $this->Number->format($subcategory->status) ?></td>
+                                
+                                <td><?= ($subcategory->status == '1')?'Active':'InActive'; ?></td>
                                 <td><?php if ($subcategory->created != "") echo $subcategory->created->format('d-M-Y'); ?></td>
                                 <td class="actions">
                                     <?= $this->Html->link(__('<i class="fa fa-fw fa-eye"></i> View'), ['action' => 'view', $subcategory->id], ['class' => 'btn btn-primary btn-sm', 'escape' => false]) ?>
