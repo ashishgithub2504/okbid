@@ -1,0 +1,186 @@
+2017-05-04 12:04:10 Error: [ParseError] syntax error, unexpected '<'
+Stack Trace:
+#0 D:\xampp\htdocs\cake3_basic\vendor\cakephp\cakephp\src\View\View.php(973): Bake\View\BakeView->_evaluate(Array)
+#1 D:\xampp\htdocs\cake3_basic\vendor\cakephp\cakephp\src\View\View.php(1363): Cake\View\View->_render('D:\\xampp\\htdocs...', Array)
+#2 D:\xampp\htdocs\cake3_basic\vendor\cakephp\cakephp\src\View\View.php(501): Cake\View\View->_renderElement('D:\\xampp\\htdocs...', Array, Array)
+#3 D:\xampp\htdocs\cake3_basic\tmp\bake\add-ctp.php(21): Cake\View\View->element('form')
+#4 D:\xampp\htdocs\cake3_basic\vendor\cakephp\bake\src\View\BakeView.php(204): include('D:\\xampp\\htdocs...')
+#5 D:\xampp\htdocs\cake3_basic\vendor\cakephp\cakephp\src\View\View.php(973): Bake\View\BakeView->_evaluate(Array)
+#6 D:\xampp\htdocs\cake3_basic\vendor\cakephp\bake\src\View\BakeView.php(140): Cake\View\View->_render('D:\\xampp\\htdocs...')
+#7 D:\xampp\htdocs\cake3_basic\vendor\cakephp\bake\src\Shell\Task\BakeTemplateTask.php(89): Bake\View\BakeView->render('Template/add')
+#8 D:\xampp\htdocs\cake3_basic\vendor\cakephp\bake\src\Shell\Task\TemplateTask.php(430): Bake\Shell\Task\BakeTemplateTask->generate('Template/add')
+#9 D:\xampp\htdocs\cake3_basic\vendor\cakephp\bake\src\Shell\Task\TemplateTask.php(152): Bake\Shell\Task\TemplateTask->getContent('add', Array)
+#10 [internal function]: Bake\Shell\Task\TemplateTask->main('enquiries')
+#11 D:\xampp\htdocs\cake3_basic\vendor\cakephp\cakephp\src\Console\Shell.php(472): call_user_func_array(Array, Array)
+#12 D:\xampp\htdocs\cake3_basic\vendor\cakephp\cakephp\src\Console\Shell.php(465): Cake\Console\Shell->runCommand(Array, false, Array)
+#13 D:\xampp\htdocs\cake3_basic\vendor\cakephp\cakephp\src\Console\ShellDispatcher.php(227): Cake\Console\Shell->runCommand(Array, true, Array)
+#14 D:\xampp\htdocs\cake3_basic\vendor\cakephp\cakephp\src\Console\ShellDispatcher.php(182): Cake\Console\ShellDispatcher->_dispatch(Array)
+#15 D:\xampp\htdocs\cake3_basic\vendor\cakephp\cakephp\src\Console\ShellDispatcher.php(128): Cake\Console\ShellDispatcher->dispatch(Array)
+#16 D:\xampp\htdocs\cake3_basic\bin\cake.php(34): Cake\Console\ShellDispatcher::run(Array)
+#17 {main}
+
+
+2017-05-04 12:15:03 Error: [ParseError] syntax error, unexpected '}', expecting end of file
+Stack Trace:
+#0 D:\xampp\htdocs\cake3_basic\vendor\cakephp\cakephp\src\View\View.php(973): Bake\View\BakeView->_evaluate(Array)
+#1 D:\xampp\htdocs\cake3_basic\vendor\cakephp\cakephp\src\View\View.php(1363): Cake\View\View->_render('D:\\xampp\\htdocs...', Array)
+#2 D:\xampp\htdocs\cake3_basic\vendor\cakephp\cakephp\src\View\View.php(501): Cake\View\View->_renderElement('D:\\xampp\\htdocs...', Array, Array)
+#3 D:\xampp\htdocs\cake3_basic\tmp\bake\add-ctp.php(21): Cake\View\View->element('form')
+#4 D:\xampp\htdocs\cake3_basic\vendor\cakephp\bake\src\View\BakeView.php(204): include('D:\\xampp\\htdocs...')
+#5 D:\xampp\htdocs\cake3_basic\vendor\cakephp\cakephp\src\View\View.php(973): Bake\View\BakeView->_evaluate(Array)
+#6 D:\xampp\htdocs\cake3_basic\vendor\cakephp\bake\src\View\BakeView.php(140): Cake\View\View->_render('D:\\xampp\\htdocs...')
+#7 D:\xampp\htdocs\cake3_basic\vendor\cakephp\bake\src\Shell\Task\BakeTemplateTask.php(89): Bake\View\BakeView->render('Template/add')
+#8 D:\xampp\htdocs\cake3_basic\vendor\cakephp\bake\src\Shell\Task\TemplateTask.php(430): Bake\Shell\Task\BakeTemplateTask->generate('Template/add')
+#9 D:\xampp\htdocs\cake3_basic\vendor\cakephp\bake\src\Shell\Task\TemplateTask.php(152): Bake\Shell\Task\TemplateTask->getContent('add', Array)
+#10 [internal function]: Bake\Shell\Task\TemplateTask->main('enquiries')
+#11 D:\xampp\htdocs\cake3_basic\vendor\cakephp\cakephp\src\Console\Shell.php(472): call_user_func_array(Array, Array)
+#12 D:\xampp\htdocs\cake3_basic\vendor\cakephp\cakephp\src\Console\Shell.php(465): Cake\Console\Shell->runCommand(Array, false, Array)
+#13 D:\xampp\htdocs\cake3_basic\vendor\cakephp\cakephp\src\Console\ShellDispatcher.php(227): Cake\Console\Shell->runCommand(Array, true, Array)
+#14 D:\xampp\htdocs\cake3_basic\vendor\cakephp\cakephp\src\Console\ShellDispatcher.php(182): Cake\Console\ShellDispatcher->_dispatch(Array)
+#15 D:\xampp\htdocs\cake3_basic\vendor\cakephp\cakephp\src\Console\ShellDispatcher.php(128): Cake\Console\ShellDispatcher->dispatch(Array)
+#16 D:\xampp\htdocs\cake3_basic\bin\cake.php(34): Cake\Console\ShellDispatcher::run(Array)
+#17 {main}
+
+
+2017-05-04 13:38:04 Error: [Cake\Database\Exception] SQLSTATE[42S02]: Base table or view not found: 1146 Table 'cake3_basic.compaigns' doesn't exist
+Stack Trace:
+#0 D:\xampp\htdocs\cake3_basic\vendor\cakephp\cakephp\src\Database\Schema\Collection.php(97): Cake\Database\Schema\Collection->_reflect('Column', 'compaigns', Array, Object(Cake\Database\Schema\Table))
+#1 D:\xampp\htdocs\cake3_basic\vendor\cakephp\cakephp\src\Database\Schema\CachedCollection.php(63): Cake\Database\Schema\Collection->describe('compaigns', Array)
+#2 D:\xampp\htdocs\cake3_basic\vendor\cakephp\cakephp\src\ORM\Table.php(440): Cake\Database\Schema\CachedCollection->describe('compaigns')
+#3 D:\xampp\htdocs\cake3_basic\vendor\cakephp\cakephp\src\ORM\Table.php(518): Cake\ORM\Table->schema()
+#4 D:\xampp\htdocs\cake3_basic\vendor\cakephp\bake\src\Shell\Task\ModelTask.php(215): Cake\ORM\Table->primaryKey()
+#5 D:\xampp\htdocs\cake3_basic\vendor\cakephp\bake\src\Shell\Task\ModelTask.php(127): Bake\Shell\Task\ModelTask->getAssociations(Object(Cake\ORM\Table))
+#6 D:\xampp\htdocs\cake3_basic\vendor\cakephp\bake\src\Shell\Task\ModelTask.php(110): Bake\Shell\Task\ModelTask->getTableContext(Object(Cake\ORM\Table), 'compaigns', 'Compaigns')
+#7 D:\xampp\htdocs\cake3_basic\vendor\cakephp\bake\src\Shell\Task\ModelTask.php(97): Bake\Shell\Task\ModelTask->bake('Compaigns')
+#8 D:\xampp\htdocs\cake3_basic\vendor\cakephp\bake\src\Shell\BakeShell.php(257): Bake\Shell\Task\ModelTask->main('Compaigns')
+#9 D:\xampp\htdocs\cake3_basic\vendor\cakephp\cakephp\src\Collection\CollectionTrait.php(52): Bake\Shell\BakeShell->Bake\Shell\{closure}('Compaigns', 0)
+#10 D:\xampp\htdocs\cake3_basic\vendor\cakephp\bake\src\Shell\BakeShell.php(260): Cake\Collection\Collection->each(Object(Closure))
+#11 [internal function]: Bake\Shell\BakeShell->all('compaigns')
+#12 D:\xampp\htdocs\cake3_basic\vendor\cakephp\cakephp\src\Console\Shell.php(458): call_user_func_array(Array, Array)
+#13 D:\xampp\htdocs\cake3_basic\vendor\cakephp\cakephp\src\Console\ShellDispatcher.php(227): Cake\Console\Shell->runCommand(Array, true, Array)
+#14 D:\xampp\htdocs\cake3_basic\vendor\cakephp\cakephp\src\Console\ShellDispatcher.php(182): Cake\Console\ShellDispatcher->_dispatch(Array)
+#15 D:\xampp\htdocs\cake3_basic\vendor\cakephp\cakephp\src\Console\ShellDispatcher.php(128): Cake\Console\ShellDispatcher->dispatch(Array)
+#16 D:\xampp\htdocs\cake3_basic\bin\cake.php(34): Cake\Console\ShellDispatcher::run(Array)
+#17 {main}
+
+
+2017-05-04 13:39:29 Error: [Cake\Database\Exception] SQLSTATE[42S02]: Base table or view not found: 1146 Table 'cake3_basic.compaigns' doesn't exist
+Stack Trace:
+#0 D:\xampp\htdocs\cake3_basic\vendor\cakephp\cakephp\src\Database\Schema\Collection.php(97): Cake\Database\Schema\Collection->_reflect('Column', 'compaigns', Array, Object(Cake\Database\Schema\Table))
+#1 D:\xampp\htdocs\cake3_basic\vendor\cakephp\cakephp\src\Database\Schema\CachedCollection.php(63): Cake\Database\Schema\Collection->describe('compaigns', Array)
+#2 D:\xampp\htdocs\cake3_basic\vendor\cakephp\cakephp\src\ORM\Table.php(440): Cake\Database\Schema\CachedCollection->describe('compaigns')
+#3 D:\xampp\htdocs\cake3_basic\vendor\cakephp\cakephp\src\ORM\Table.php(518): Cake\ORM\Table->schema()
+#4 D:\xampp\htdocs\cake3_basic\vendor\cakephp\bake\src\Shell\Task\ModelTask.php(215): Cake\ORM\Table->primaryKey()
+#5 D:\xampp\htdocs\cake3_basic\vendor\cakephp\bake\src\Shell\Task\ModelTask.php(127): Bake\Shell\Task\ModelTask->getAssociations(Object(Cake\ORM\Table))
+#6 D:\xampp\htdocs\cake3_basic\vendor\cakephp\bake\src\Shell\Task\ModelTask.php(110): Bake\Shell\Task\ModelTask->getTableContext(Object(Cake\ORM\Table), 'compaigns', 'Compaigns')
+#7 D:\xampp\htdocs\cake3_basic\vendor\cakephp\bake\src\Shell\Task\ModelTask.php(97): Bake\Shell\Task\ModelTask->bake('Compaigns')
+#8 D:\xampp\htdocs\cake3_basic\vendor\cakephp\bake\src\Shell\BakeShell.php(257): Bake\Shell\Task\ModelTask->main('Compaigns')
+#9 D:\xampp\htdocs\cake3_basic\vendor\cakephp\cakephp\src\Collection\CollectionTrait.php(52): Bake\Shell\BakeShell->Bake\Shell\{closure}('Compaigns', 0)
+#10 D:\xampp\htdocs\cake3_basic\vendor\cakephp\bake\src\Shell\BakeShell.php(260): Cake\Collection\Collection->each(Object(Closure))
+#11 [internal function]: Bake\Shell\BakeShell->all('compaigns')
+#12 D:\xampp\htdocs\cake3_basic\vendor\cakephp\cakephp\src\Console\Shell.php(458): call_user_func_array(Array, Array)
+#13 D:\xampp\htdocs\cake3_basic\vendor\cakephp\cakephp\src\Console\ShellDispatcher.php(227): Cake\Console\Shell->runCommand(Array, true, Array)
+#14 D:\xampp\htdocs\cake3_basic\vendor\cakephp\cakephp\src\Console\ShellDispatcher.php(182): Cake\Console\ShellDispatcher->_dispatch(Array)
+#15 D:\xampp\htdocs\cake3_basic\vendor\cakephp\cakephp\src\Console\ShellDispatcher.php(128): Cake\Console\ShellDispatcher->dispatch(Array)
+#16 D:\xampp\htdocs\cake3_basic\bin\cake.php(34): Cake\Console\ShellDispatcher::run(Array)
+#17 {main}
+
+
+2018-07-05 17:02:54 Error: [Cake\Database\Exception] SQLSTATE[42S02]: Base table or view not found: 1146 Table 'okbid.cetegories' doesn't exist
+Stack Trace:
+#0 F:\xampp\htdocs\okbid\vendor\cakephp\cakephp\src\Database\Schema\Collection.php(97): Cake\Database\Schema\Collection->_reflect('Column', 'cetegories', Array, Object(Cake\Database\Schema\Table))
+#1 F:\xampp\htdocs\okbid\vendor\cakephp\cakephp\src\Database\Schema\CachedCollection.php(63): Cake\Database\Schema\Collection->describe('cetegories', Array)
+#2 F:\xampp\htdocs\okbid\vendor\cakephp\cakephp\src\ORM\Table.php(440): Cake\Database\Schema\CachedCollection->describe('cetegories')
+#3 F:\xampp\htdocs\okbid\vendor\cakephp\cakephp\src\ORM\Table.php(518): Cake\ORM\Table->schema()
+#4 F:\xampp\htdocs\okbid\vendor\cakephp\bake\src\Shell\Task\ModelTask.php(215): Cake\ORM\Table->primaryKey()
+#5 F:\xampp\htdocs\okbid\vendor\cakephp\bake\src\Shell\Task\ModelTask.php(127): Bake\Shell\Task\ModelTask->getAssociations(Object(Cake\ORM\Table))
+#6 F:\xampp\htdocs\okbid\vendor\cakephp\bake\src\Shell\Task\ModelTask.php(110): Bake\Shell\Task\ModelTask->getTableContext(Object(Cake\ORM\Table), 'cetegories', 'Cetegories')
+#7 F:\xampp\htdocs\okbid\vendor\cakephp\bake\src\Shell\Task\ModelTask.php(97): Bake\Shell\Task\ModelTask->bake('Cetegories')
+#8 F:\xampp\htdocs\okbid\vendor\cakephp\bake\src\Shell\BakeShell.php(257): Bake\Shell\Task\ModelTask->main('Cetegories')
+#9 F:\xampp\htdocs\okbid\vendor\cakephp\cakephp\src\Collection\CollectionTrait.php(52): Bake\Shell\BakeShell->Bake\Shell\{closure}('cetegories', 0)
+#10 F:\xampp\htdocs\okbid\vendor\cakephp\bake\src\Shell\BakeShell.php(260): Cake\Collection\Collection->each(Object(Closure))
+#11 [internal function]: Bake\Shell\BakeShell->all('cetegories')
+#12 F:\xampp\htdocs\okbid\vendor\cakephp\cakephp\src\Console\Shell.php(458): call_user_func_array(Array, Array)
+#13 F:\xampp\htdocs\okbid\vendor\cakephp\cakephp\src\Console\ShellDispatcher.php(227): Cake\Console\Shell->runCommand(Array, true, Array)
+#14 F:\xampp\htdocs\okbid\vendor\cakephp\cakephp\src\Console\ShellDispatcher.php(182): Cake\Console\ShellDispatcher->_dispatch(Array)
+#15 F:\xampp\htdocs\okbid\vendor\cakephp\cakephp\src\Console\ShellDispatcher.php(128): Cake\Console\ShellDispatcher->dispatch(Array)
+#16 F:\xampp\htdocs\okbid\bin\cake.php(34): Cake\Console\ShellDispatcher::run(Array)
+#17 {main}
+
+
+2018-07-05 17:04:46 Error: [PDOException] SQLSTATE[42S22]: Column not found: 1054 Unknown column 'Images.title' in 'field list'
+Stack Trace:
+#0 F:\xampp\htdocs\okbid\vendor\cakephp\cakephp\src\Database\Statement\MysqlStatement.php(39): PDOStatement->execute(NULL)
+#1 F:\xampp\htdocs\okbid\vendor\cakephp\cakephp\src\Database\Connection.php(276): Cake\Database\Statement\MysqlStatement->execute()
+#2 F:\xampp\htdocs\okbid\vendor\cakephp\cakephp\src\Database\Query.php(190): Cake\Database\Connection->run(Object(Cake\ORM\Query))
+#3 F:\xampp\htdocs\okbid\vendor\cakephp\cakephp\src\ORM\Query.php(957): Cake\Database\Query->execute()
+#4 F:\xampp\htdocs\okbid\vendor\cakephp\cakephp\src\Datasource\QueryTrait.php(276): Cake\ORM\Query->_execute()
+#5 F:\xampp\htdocs\okbid\vendor\cakephp\cakephp\src\ORM\Query.php(905): Cake\ORM\Query->_all()
+#6 F:\xampp\htdocs\okbid\vendor\cakephp\cakephp\src\Datasource\QueryTrait.php(293): Cake\ORM\Query->all()
+#7 F:\xampp\htdocs\okbid\src\Controller\AppController.php(85): Cake\ORM\Query->toArray()
+#8 F:\xampp\htdocs\okbid\vendor\cakephp\cakephp\src\Controller\Controller.php(262): App\Controller\AppController->initialize()
+#9 F:\xampp\htdocs\okbid\vendor\cakephp\bake\src\Shell\Task\TestTask.php(324): Cake\Controller\Controller->__construct(Object(Cake\Network\Request), Object(Cake\Network\Response))
+#10 F:\xampp\htdocs\okbid\vendor\cakephp\bake\src\Shell\Task\TestTask.php(229): Bake\Shell\Task\TestTask->buildTestSubject('Controller', 'App\\Controller\\...')
+#11 F:\xampp\htdocs\okbid\vendor\cakephp\bake\src\Shell\Task\ControllerTask.php(206): Bake\Shell\Task\TestTask->bake('Controller', 'Admin\\Categorie...')
+#12 F:\xampp\htdocs\okbid\vendor\cakephp\bake\src\Shell\Task\ControllerTask.php(152): Bake\Shell\Task\ControllerTask->bakeTest('Categories')
+#13 F:\xampp\htdocs\okbid\vendor\cakephp\bake\src\Shell\Task\ControllerTask.php(66): Bake\Shell\Task\ControllerTask->bake('Categories')
+#14 F:\xampp\htdocs\okbid\vendor\cakephp\bake\src\Shell\BakeShell.php(258): Bake\Shell\Task\ControllerTask->main('Categories')
+#15 F:\xampp\htdocs\okbid\vendor\cakephp\cakephp\src\Collection\CollectionTrait.php(52): Bake\Shell\BakeShell->Bake\Shell\{closure}('categories', 0)
+#16 F:\xampp\htdocs\okbid\vendor\cakephp\bake\src\Shell\BakeShell.php(260): Cake\Collection\Collection->each(Object(Closure))
+#17 [internal function]: Bake\Shell\BakeShell->all('categories')
+#18 F:\xampp\htdocs\okbid\vendor\cakephp\cakephp\src\Console\Shell.php(458): call_user_func_array(Array, Array)
+#19 F:\xampp\htdocs\okbid\vendor\cakephp\cakephp\src\Console\ShellDispatcher.php(227): Cake\Console\Shell->runCommand(Array, true, Array)
+#20 F:\xampp\htdocs\okbid\vendor\cakephp\cakephp\src\Console\ShellDispatcher.php(182): Cake\Console\ShellDispatcher->_dispatch(Array)
+#21 F:\xampp\htdocs\okbid\vendor\cakephp\cakephp\src\Console\ShellDispatcher.php(128): Cake\Console\ShellDispatcher->dispatch(Array)
+#22 F:\xampp\htdocs\okbid\bin\cake.php(34): Cake\Console\ShellDispatcher::run(Array)
+#23 {main}
+
+
+2018-08-09 03:25:12 Error: [Cake\Database\Exception] SQLSTATE[42S02]: Base table or view not found: 1146 Table 'okbid.conversation' doesn't exist
+Stack Trace:
+#0 F:\xampp\htdocs\okbid\vendor\cakephp\cakephp\src\Database\Schema\Collection.php(97): Cake\Database\Schema\Collection->_reflect('Column', 'conversation', Array, Object(Cake\Database\Schema\Table))
+#1 F:\xampp\htdocs\okbid\vendor\cakephp\cakephp\src\Database\Schema\CachedCollection.php(63): Cake\Database\Schema\Collection->describe('conversation', Array)
+#2 F:\xampp\htdocs\okbid\vendor\cakephp\cakephp\src\ORM\Table.php(440): Cake\Database\Schema\CachedCollection->describe('conversation')
+#3 F:\xampp\htdocs\okbid\vendor\cakephp\cakephp\src\ORM\Table.php(518): Cake\ORM\Table->schema()
+#4 F:\xampp\htdocs\okbid\vendor\cakephp\bake\src\Shell\Task\ModelTask.php(215): Cake\ORM\Table->primaryKey()
+#5 F:\xampp\htdocs\okbid\vendor\cakephp\bake\src\Shell\Task\ModelTask.php(127): Bake\Shell\Task\ModelTask->getAssociations(Object(Cake\ORM\Table))
+#6 F:\xampp\htdocs\okbid\vendor\cakephp\bake\src\Shell\Task\ModelTask.php(110): Bake\Shell\Task\ModelTask->getTableContext(Object(Cake\ORM\Table), 'conversation', 'Conversation')
+#7 F:\xampp\htdocs\okbid\vendor\cakephp\bake\src\Shell\Task\ModelTask.php(97): Bake\Shell\Task\ModelTask->bake('Conversation')
+#8 [internal function]: Bake\Shell\Task\ModelTask->main('conversation')
+#9 F:\xampp\htdocs\okbid\vendor\cakephp\cakephp\src\Console\Shell.php(472): call_user_func_array(Array, Array)
+#10 F:\xampp\htdocs\okbid\vendor\cakephp\cakephp\src\Console\Shell.php(465): Cake\Console\Shell->runCommand(Array, false, Array)
+#11 F:\xampp\htdocs\okbid\vendor\cakephp\cakephp\src\Console\ShellDispatcher.php(227): Cake\Console\Shell->runCommand(Array, true, Array)
+#12 F:\xampp\htdocs\okbid\vendor\cakephp\cakephp\src\Console\ShellDispatcher.php(182): Cake\Console\ShellDispatcher->_dispatch(Array)
+#13 F:\xampp\htdocs\okbid\vendor\cakephp\cakephp\src\Console\ShellDispatcher.php(128): Cake\Console\ShellDispatcher->dispatch(Array)
+#14 F:\xampp\htdocs\okbid\bin\cake.php(34): Cake\Console\ShellDispatcher::run(Array)
+#15 {main}
+
+
+2018-09-19 17:16:25 Error: [PDOException] SQLSTATE[42S22]: Column not found: 1054 Unknown column 'Images.title' in 'field list'
+Stack Trace:
+#0 F:\xampp\htdocs\okbid\vendor\cakephp\cakephp\src\Database\Statement\MysqlStatement.php(39): PDOStatement->execute(NULL)
+#1 F:\xampp\htdocs\okbid\vendor\cakephp\cakephp\src\Database\Connection.php(276): Cake\Database\Statement\MysqlStatement->execute()
+#2 F:\xampp\htdocs\okbid\vendor\cakephp\cakephp\src\Database\Query.php(190): Cake\Database\Connection->run(Object(Cake\ORM\Query))
+#3 F:\xampp\htdocs\okbid\vendor\cakephp\cakephp\src\ORM\Query.php(957): Cake\Database\Query->execute()
+#4 F:\xampp\htdocs\okbid\vendor\cakephp\cakephp\src\Datasource\QueryTrait.php(276): Cake\ORM\Query->_execute()
+#5 F:\xampp\htdocs\okbid\vendor\cakephp\cakephp\src\ORM\Query.php(905): Cake\ORM\Query->_all()
+#6 F:\xampp\htdocs\okbid\vendor\cakephp\cakephp\src\Datasource\QueryTrait.php(293): Cake\ORM\Query->all()
+#7 F:\xampp\htdocs\okbid\src\Controller\AppController.php(85): Cake\ORM\Query->toArray()
+#8 F:\xampp\htdocs\okbid\vendor\cakephp\cakephp\src\Controller\Controller.php(262): App\Controller\AppController->initialize()
+#9 F:\xampp\htdocs\okbid\vendor\cakephp\bake\src\Shell\Task\TestTask.php(324): Cake\Controller\Controller->__construct(Object(Cake\Network\Request), Object(Cake\Network\Response))
+#10 F:\xampp\htdocs\okbid\vendor\cakephp\bake\src\Shell\Task\TestTask.php(229): Bake\Shell\Task\TestTask->buildTestSubject('Controller', 'App\\Controller\\...')
+#11 F:\xampp\htdocs\okbid\vendor\cakephp\bake\src\Shell\Task\ControllerTask.php(206): Bake\Shell\Task\TestTask->bake('Controller', 'Admin\\Conversat...')
+#12 F:\xampp\htdocs\okbid\vendor\cakephp\bake\src\Shell\Task\ControllerTask.php(152): Bake\Shell\Task\ControllerTask->bakeTest('Conversations')
+#13 F:\xampp\htdocs\okbid\vendor\cakephp\bake\src\Shell\Task\ControllerTask.php(66): Bake\Shell\Task\ControllerTask->bake('Conversations')
+#14 F:\xampp\htdocs\okbid\vendor\cakephp\bake\src\Shell\BakeShell.php(258): Bake\Shell\Task\ControllerTask->main('Conversations')
+#15 F:\xampp\htdocs\okbid\vendor\cakephp\cakephp\src\Collection\CollectionTrait.php(52): Bake\Shell\BakeShell->Bake\Shell\{closure}('conversations', 0)
+#16 F:\xampp\htdocs\okbid\vendor\cakephp\bake\src\Shell\BakeShell.php(260): Cake\Collection\Collection->each(Object(Closure))
+#17 [internal function]: Bake\Shell\BakeShell->all('conversations')
+#18 F:\xampp\htdocs\okbid\vendor\cakephp\cakephp\src\Console\Shell.php(458): call_user_func_array(Array, Array)
+#19 F:\xampp\htdocs\okbid\vendor\cakephp\cakephp\src\Console\ShellDispatcher.php(227): Cake\Console\Shell->runCommand(Array, true, Array)
+#20 F:\xampp\htdocs\okbid\vendor\cakephp\cakephp\src\Console\ShellDispatcher.php(182): Cake\Console\ShellDispatcher->_dispatch(Array)
+#21 F:\xampp\htdocs\okbid\vendor\cakephp\cakephp\src\Console\ShellDispatcher.php(128): Cake\Console\ShellDispatcher->dispatch(Array)
+#22 F:\xampp\htdocs\okbid\bin\cake.php(34): Cake\Console\ShellDispatcher::run(Array)
+#23 {main}
+
+
